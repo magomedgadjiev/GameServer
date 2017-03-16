@@ -35,7 +35,7 @@
   			{
 				"key":"200",
 				"message":"success"
-		}
+			}
 	}       
          200 OK - удачная регистрация  
          400 Forbiden - уже зарегестрирован
@@ -70,8 +70,8 @@
                   {
                         "response":
                         {
-                          "message": "you don't is login",
-                          "key":"400"
+                        	 "key":"200",
+				 "message":"success"
                         }
                    }            
                       200 OK - удачная операция  
@@ -84,8 +84,8 @@
 >     * Responce:	{
                        	 "response":
                        	 {
-                       	   "message": "you don't is login",
-                       	   "key":"400"
+                       	        "key":"200",
+				"message":"success"
                        	 }
                    	}   
 		   	200 OK - удачная операция  
