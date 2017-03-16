@@ -26,6 +26,7 @@
 		  
 #### Регистрация пользователя  
 >* /signUp
+
 >    * Request: { "email": "stark@north.io", "username": "JohnSnow", "password": "TheWall" }
 
 >    * Responce:
@@ -41,6 +42,7 @@
 	 409 Bad request - Введены неправильные данные
 #### Получение пользователя текущей сессии  
 >* /getInfoUser
+
 >    * Request: 
             
 >    * Responce:{
@@ -61,10 +63,8 @@
 
 #### Обновление информации о пользователе  
 >* /setInfoUser
->    * Request: 
-            {  
-                {"login":"login1", "password":"prevpass","newpassword":"passnew"},  
-            }  
+
+>    * Request:{"login":"login1", "password":"prevpass","newpassword":"passnew"},
 	    
 >    * Responce:
                   {
@@ -78,16 +78,16 @@
                       400 Bad Request - не авторизовался
 #### Выход пользователя  
 >* /signOut
+
 >     * Request: 
 
->     * Responce:
- 		{
-                        "response":
-                        {
-                          "message": "you don't is login",
-                          "key":"400"
-                        }
-                   }   
-		   200 OK - удачная операция  
+>     * Responce:	{
+                       	 "response":
+                       	 {
+                       	   "message": "you don't is login",
+                       	   "key":"400"
+                       	 }
+                   	}   
+		   	200 OK - удачная операция  
 
 
