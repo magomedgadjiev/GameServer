@@ -12,6 +12,7 @@
 #### Авторизация пользователя.
 >* /SignIn
 >     *Request:{ "email": "stark@north.io", "password": "TheWall" }
+
 >     *Response: {
 	            "response":		
   	         	{
@@ -26,6 +27,7 @@
 #### Регистрация пользователя  
 >* /signUp
 >    * Request: { "email": "stark@north.io", "username": "JohnSnow", "password": "TheWall" }
+
 >    * Responce:
         {
 		"response":		
@@ -47,7 +49,7 @@
                     "key":"200",
                     "User":"
                       {
-                        "login\": "JohnSnow", 
+                        "login": "JohnSnow", 
                         "password": "TheWall",
                          "email": "stark@north.io"
                     }”,
@@ -63,6 +65,7 @@
             {  
                 {"login":"login1", "password":"prevpass","newpassword":"passnew"},  
             }  
+	    
 >    * Responce:
                   {
                         "response":
@@ -70,7 +73,7 @@
                           "message": "you don't is login",
                           "key":"400"
                         }
-                      }            
+                   }            
                       200 OK - удачная операция  
                       400 Bad Request - не авторизовался
 #### Выход пользователя  
@@ -78,8 +81,13 @@
 >     * Request: 
 
 >     * Responce:
-             { "status": "200 OK"}        
-              200 OK - удачная операция  
-              400 Bad Request - запрос не понят
+ 		{
+                        "response":
+                        {
+                          "message": "you don't is login",
+                          "key":"400"
+                        }
+                   }   
+		   200 OK - удачная операция  
 
 
