@@ -44,16 +44,16 @@ public class UserAuthController {
         JsonObject jsonObject1 = new JsonObject();
         UserProfile userProfile = gson.fromJson(jb.toString(), UserProfile.class);
         if (userProfile.isEmpty()) {
-            jsonObject.addProperty("message", "succes");
             jsonObject.addProperty("key", "200");
+            jsonObject.addProperty("message", "succes");
             jsonObject1.add("response", jsonObject.getAsJsonObject());
             resp.setStatus(409);
             resp.getWriter().write(jsonObject1.toString());
             return;
         }
         if (accountService.isSignUp(userProfile.getEmail())) {
-            jsonObject.addProperty("message", "succes");
             jsonObject.addProperty("key", "200");
+            jsonObject.addProperty("message", "succes");
             if (!accountService.isLogIn(req.getSession().getId())) {
                 accountService.addSession(req.getSession().getId(), userProfile);
             }
@@ -62,8 +62,8 @@ public class UserAuthController {
             resp.getWriter().write(jsonObject1.toString());
         } else {
             resp.setStatus(400);
-            jsonObject.addProperty("message", "succes");
             jsonObject.addProperty("key", "200");
+            jsonObject.addProperty("message", "succes");
             jsonObject1.add("response", jsonObject.getAsJsonObject());
             resp.getWriter().write(jsonObject1.toString());
         }
