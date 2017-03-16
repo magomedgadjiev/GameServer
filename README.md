@@ -11,23 +11,32 @@
 ###  /auth
 #### Авторизация пользователя.
 >* /SignIn
->     *Request:{ "email": "stark@north.io", "username": "JohnSnow", "password": "TheWall" }
+>     *Request:{ "email": "stark@north.io", "password": "TheWall" }
 >     *Response: {
-	                	"response":		
-  		                	{
-	                  			"key":"200",
-		                   		"User":"
-	              			  	{
-		              				  "login": "JohnSnow", 
-              						  "password": "TheWall",
-	             					    "email": "stark@north.io"
-	                			  },
-			            	      "message":"success"
-		            	      }
-	              	}
+	            "response":		
+  	         	{
+ 				"key":"200"
+				"message":"success"
+         	        }
+	          }
                   200 - пользоваель создан
                   400 - не зарегестрирован
                   409 - введены неправильные данные
+		  
+#### Регистрация пользователя  
+>* /signUp
+>    * Request: { "email": "stark@north.io", "username": "JohnSnow", "password": "TheWall" }
+>    * Responce:
+        {
+		"response":		
+  			{
+				"key":"200",
+				"message":"success"
+		}
+	}       
+         200 OK - удачная регистрация  
+         400 Forbiden - уже зарегестрирован
+	 409 Bad request - Введены неправильные данные
 #### Получение пользователя текущей сессии  
 >* /getInfoUser
 >    * Request: 
@@ -49,7 +58,7 @@
              400 Bad Request - не авторизовался 
 
 #### Обновление информации о пользователе  
->* /update
+>* /setInfoUser
 >    * Request: 
             {  
                 {"login":"login1", "password":"prevpass","newpassword":"passnew"},  
