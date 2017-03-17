@@ -49,13 +49,13 @@
                   "response":		
                     {
                     "key":"200",
-                    "User":"
+                    "message":"success",
+		     "User":"
                       {
                         "login": "JohnSnow", 
                         "password": "TheWall",
                          "email": "stark@north.io"
                     }”,
-                    "message":"success"
                   }
                 }  
              200 OK - удачная операция  
