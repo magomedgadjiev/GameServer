@@ -35,7 +35,7 @@
   			{
 				"key":"200",
 				"message":"success"
-			}
+		}
 	}       
          200 OK - удачная регистрация  
          400 Forbiden - уже зарегестрирован
@@ -70,8 +70,8 @@
                   {
                         "response":
                         {
-                        	 "key":"200",
-				 "message":"success"
+                          "message": "you don't is login",
+                          "key":"400"
                         }
                    }            
                       200 OK - удачная операция  
@@ -84,14 +84,10 @@
 >     * Responce:	{
                        	 "response":
                        	 {
-                       	        "key":"200",
-				"message":"success"
+                       	   "message": "you don't is login",
+                       	   "key":"400"
                        	 }
                    	}   
 		   	200 OK - удачная операция  
 
-
-
-
-heroku https://testasdfgg.herokuapp.com/
 

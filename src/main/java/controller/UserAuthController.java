@@ -6,155 +6,106 @@ import java.io.IOException;
 import accountService.AccountService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import jsonModels.JsonResponse;
+import jsonModels.JsonResponseWithUser;
+import jsonModels.Resp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import user.UserProfile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @RestController
+@Component
 @RequestMapping(value = "/auth")
 public class UserAuthController {
+
+    @Autowired
     private final AccountService accountService;
 
     @RequestMapping(value = "/signOut", method = RequestMethod.POST)
-    public void signOut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        if (accountService.isLogIn(req.getSession().getId())) {
-            accountService.deleteSession(req.getSession().getId());
+    public ResponseEntity<JsonResponse> signOut(RequestEntity<String> req, HttpSession session) throws IOException {
+        if (accountService.isLogIn(session.getId())) {
+            accountService.deleteSession(session.getId());
         }
-        JsonObject jsonObject = new JsonObject();
-        JsonObject jsonObject1 = new JsonObject();
-        jsonObject.addProperty("key", "200");
-        jsonObject.addProperty("message", "succes");
-        jsonObject1.add("response", jsonObject.getAsJsonObject());
-        resp.getWriter().write(jsonObject1.toString());
+        JsonResponse jsonResponse = new JsonResponse(new Resp(200, "succes"));
+        return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/signIn", method = RequestMethod.POST)
-    public void signIn(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        StringBuilder jb = new StringBuilder();
-        String line;
-        BufferedReader reader = req.getReader();
-        while ((line = reader.readLine()) != null) {
-            jb.append(line);
-        }
+    public ResponseEntity<JsonResponse> signIn(RequestEntity<String> req, HttpSession session) throws IOException {
+        String reqBody = req.getBody();
         Gson gson = new Gson();
-        JsonObject jsonObject = new JsonObject();
-        JsonObject jsonObject1 = new JsonObject();
-        UserProfile userProfile = gson.fromJson(jb.toString(), UserProfile.class);
+        UserProfile userProfile = gson.fromJson(reqBody, UserProfile.class);
         if (userProfile.isEmpty()) {
-            jsonObject.addProperty("key", "200");
-            jsonObject.addProperty("message", "succes");
-            jsonObject1.add("response", jsonObject.getAsJsonObject());
-            resp.setStatus(409);
-            resp.getWriter().write(jsonObject1.toString());
-            return;
+            JsonResponse jsonResponse = new JsonResponse(new Resp(200, "succes"));
+            return new ResponseEntity<>(jsonResponse, HttpStatus.CONFLICT);
         }
         if (accountService.isSignUp(userProfile.getEmail())) {
-            jsonObject.addProperty("key", "200");
-            jsonObject.addProperty("message", "succes");
-            if (!accountService.isLogIn(req.getSession().getId())) {
-                accountService.addSession(req.getSession().getId(), userProfile);
+            JsonResponse jsonResponse = new JsonResponse(new Resp(200, "succes"));
+            if (!accountService.isLogIn(session.getId())) {
+                accountService.addSession(session.getId(), userProfile);
             }
-            resp.setStatus(200);
-            jsonObject1.add("response", jsonObject.getAsJsonObject());
-            resp.getWriter().write(jsonObject1.toString());
+            return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
         } else {
-            resp.setStatus(400);
-            jsonObject.addProperty("key", "200");
-            jsonObject.addProperty("message", "succes");
-            jsonObject1.add("response", jsonObject.getAsJsonObject());
-            resp.getWriter().write(jsonObject1.toString());
+            JsonResponse jsonResponse = new JsonResponse(new Resp(200, "succes"));
+            return new ResponseEntity<>(jsonResponse, HttpStatus.BAD_REQUEST);
         }
     }
 
     @RequestMapping(value = "/getInfoUser", method = RequestMethod.POST)
-    public void getInfoUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public ResponseEntity<JsonResponseWithUser> getInfoUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Gson gson = new Gson();
-        JsonObject jsonObject = new JsonObject();
-        JsonObject jsonObject1 = new JsonObject();
         if (accountService.isLogIn(req.getSession().getId())) {
-            resp.setStatus(200);
-            jsonObject.addProperty("key", "200");
-            jsonObject.addProperty("User", gson.toJson(accountService.getUserOfSession(req.getSession().getId())));
-            jsonObject.addProperty("message", "succes");
-            jsonObject1.add("response", jsonObject.getAsJsonObject());
-            resp.getWriter().write(jsonObject1.toString());
+            JsonResponseWithUser jsonResponseWithUser = new JsonResponseWithUser(new Resp(200, "succes"), accountService.getUserOfSession(req.getSession().getId()) );
+            return new ResponseEntity<>(jsonResponseWithUser, HttpStatus.OK);
         } else {
-            jsonObject.addProperty("key", "200");
-            jsonObject.addProperty("message", "succes");
-            jsonObject1.add("response", jsonObject.getAsJsonObject());
-            resp.setStatus(400);
-            resp.getWriter().write(jsonObject1.toString());
+            JsonResponseWithUser jsonResponseWithUser = new JsonResponseWithUser(new Resp(200, "succes"), null);
+            return new ResponseEntity<>(jsonResponseWithUser, HttpStatus.BAD_REQUEST);
         }
     }
 
+
     @RequestMapping(value = "/setInfoUser", method = RequestMethod.POST)
-    public void setInfoUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        StringBuilder jb = new StringBuilder();
-        String line;
-        BufferedReader reader = req.getReader();
-        while ((line = reader.readLine()) != null) {
-            jb.append(line);
-        }
+    public ResponseEntity<JsonResponse> setInfoUser(RequestEntity<String> req, HttpSession session) throws IOException {
+        String reqBody = req.getBody();
         Gson gson = new Gson();
-        UserProfile userProfile = gson.fromJson(jb.toString(), UserProfile.class);
-        JsonObject jsonObject1 = new JsonObject();
-        if (accountService.isLogIn(req.getSession().getId())) {
-            JsonObject jsonObject = new JsonObject();
-            resp.setStatus(200);
-            accountService.getUserOfSession(req.getSession().getId()).setEmail(userProfile.getEmail());
-            accountService.getUserOfSession(req.getSession().getId()).setLogin(userProfile.getLogin());
-            accountService.getUserOfSession(req.getSession().getId()).setPassword(userProfile.getPassword());
-            jsonObject.addProperty("key", "200");
-            jsonObject.addProperty("message", "succes");
-            jsonObject1.add("response", jsonObject.getAsJsonObject());
-            resp.getWriter().write(jsonObject1.toString());
+        UserProfile userProfile = gson.fromJson(reqBody, UserProfile.class);
+        if (accountService.isLogIn(session.getId())) {
+            accountService.getUserOfSession(session.getId()).setEmail(userProfile.getEmail());
+            accountService.getUserOfSession(session.getId()).setLogin(userProfile.getLogin());
+            accountService.getUserOfSession(session.getId()).setPassword(userProfile.getPassword());
+            JsonResponse jsonResponse = new JsonResponse(new Resp(200, "succes"));
+            return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
         } else {
-            resp.setStatus(400);
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("key", "200");
-            jsonObject.addProperty("message", "succes");
-            jsonObject1.add("response", jsonObject.getAsJsonObject());
-            resp.getWriter().write(jsonObject1.toString());
+            JsonResponse jsonResponse = new JsonResponse(new Resp(200, "succes"));
+            return new ResponseEntity<>(jsonResponse, HttpStatus.BAD_REQUEST);
         }
     }
 
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
-    public void signUp(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        StringBuilder jb = new StringBuilder();
-        String line;
-        BufferedReader reader = req.getReader();
-        while ((line = reader.readLine()) != null) {
-            jb.append(line);
-        }
+    public ResponseEntity<JsonResponse> signUp(RequestEntity<String> req, HttpSession session) throws IOException {
+        String reqBody = req.getBody();
         Gson gson = new Gson();
-        JsonObject jsonObject = new JsonObject();
-        JsonObject jsonObject1 = new JsonObject();
-        UserProfile userProfile = gson.fromJson(jb.toString(), UserProfile.class);
+        UserProfile userProfile = gson.fromJson(reqBody, UserProfile.class);
         if (userProfile.isEmpty()) {
-            resp.setStatus(409);
-            jsonObject.addProperty("key", "200");
-            jsonObject.addProperty("message", "succes");
-            jsonObject1.add("response", jsonObject.getAsJsonObject());
-            resp.getWriter().write(jsonObject1.toString());
-            return;
+            JsonResponse jsonResponse = new JsonResponse(new Resp(200, "succes"));
+            return new ResponseEntity<>(jsonResponse, HttpStatus.CONFLICT);
         }
         if (accountService.isSignUp(userProfile.getEmail())) {
-            resp.setStatus(400);
-            jsonObject.addProperty("key", "200");
-            jsonObject.addProperty("message", "succes");
-            jsonObject1.add("response", jsonObject.getAsJsonObject());
-            resp.getWriter().write(jsonObject1.toString());
+            JsonResponse jsonResponse = new JsonResponse(new Resp(200, "succes"));
+            return new ResponseEntity<>(jsonResponse, HttpStatus.BAD_REQUEST);
         } else {
-            resp.setStatus(400);
-            accountService.addSession(req.getSession().getId(), userProfile);
+            accountService.addSession(session.getId(), userProfile);
             accountService.addUser(userProfile);
-            jsonObject.addProperty("key", "200");
-            jsonObject.addProperty("message", "success");
-            jsonObject1.add("response", jsonObject.getAsJsonObject());
-            resp.getWriter().write(jsonObject1.toString());
+            JsonResponse jsonResponse = new JsonResponse(new Resp(200, "succes"));
+            return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
         }
     }
 

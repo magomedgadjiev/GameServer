@@ -1,5 +1,7 @@
 package accountService;
 
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import user.UserProfile;
 
 import javax.jws.soap.SOAPBinding;
@@ -8,9 +10,9 @@ import javax.swing.text.html.parser.Entity;
 import java.util.*;
 import java.util.function.Consumer;
 
-/**
- * Created by magomed on 04.02.17.
- */
+
+@Service(value = "singleton")
+@Component
 public class AccountService {
     private Map<String, UserProfile> profiles = new HashMap<String, UserProfile>();
     private Map<String, UserProfile> sessionMap = new HashMap<String, UserProfile>();
