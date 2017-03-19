@@ -1,113 +1,103 @@
 package controller;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 
 import accountService.AccountService;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import jsonModels.JsonResponse;
-import jsonModels.JsonResponseWithUser;
-import jsonModels.Resp;
+import Models.Response;
+import Models.RespWithUser;
+import Models.Resp;
+import common.KeyHelper;
+import common.MessageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import user.UserProfile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @RestController
 @Component
-@RequestMapping(value = "/auth")
+@RequestMapping(value = "/api")
 public class UserAuthController {
 
     @Autowired
     private final AccountService accountService;
 
-    @RequestMapping(value = "/signOut", method = RequestMethod.POST)
-    public ResponseEntity<JsonResponse> signOut(RequestEntity<String> req, HttpSession session) throws IOException {
-        if (accountService.isLogIn(session.getId())) {
-            accountService.deleteSession(session.getId());
+    @Autowired
+    HttpSession session;
+
+    @RequestMapping(value = "/auth/signOut", method = RequestMethod.POST)
+    public ResponseEntity<Response> signOut() throws IOException {
+        if (session.getAttribute(KeyHelper.LOGIN) != null) {
+            session.invalidate();
         }
-        JsonResponse jsonResponse = new JsonResponse(new Resp(200, "succes"));
-        return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
+        Response<Resp> response= new Response<>(new Resp(200, MessageHelper.SUCCES));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/signIn", method = RequestMethod.POST)
-    public ResponseEntity<JsonResponse> signIn(RequestEntity<String> req, HttpSession session) throws IOException {
-        String reqBody = req.getBody();
-        Gson gson = new Gson();
-        UserProfile userProfile = gson.fromJson(reqBody, UserProfile.class);
+    @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
+    public ResponseEntity<Response> signIn(@RequestBody UserProfile userProfile) throws IOException {
         if (userProfile.isEmpty()) {
-            JsonResponse jsonResponse = new JsonResponse(new Resp(200, "succes"));
-            return new ResponseEntity<>(jsonResponse, HttpStatus.CONFLICT);
+            Response<Resp> response= new Response<>(new Resp(200, "Not all required parameters provided"));
+            return new ResponseEntity<>(response, HttpStatus.CONFLICT);
         }
         if (accountService.isSignUp(userProfile.getEmail())) {
-            JsonResponse jsonResponse = new JsonResponse(new Resp(200, "succes"));
-            if (!accountService.isLogIn(session.getId())) {
-                accountService.addSession(session.getId(), userProfile);
+            if (session.getAttribute(KeyHelper.LOGIN) ==  null) {
+                session.setAttribute(KeyHelper.LOGIN, true);
             }
-            return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
+            Response<RespWithUser> response = new Response<>(new RespWithUser(200, accountService.getUser(userProfile.getEmail()), "Logged in succesfully"));
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
-            JsonResponse jsonResponse = new JsonResponse(new Resp(200, "succes"));
-            return new ResponseEntity<>(jsonResponse, HttpStatus.BAD_REQUEST);
+            Response<Resp> response= new Response<>(new Resp(200, "You did't registration"));
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
 
-    @RequestMapping(value = "/getInfoUser", method = RequestMethod.POST)
-    public ResponseEntity<JsonResponseWithUser> getInfoUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Gson gson = new Gson();
-        if (accountService.isLogIn(req.getSession().getId())) {
-            JsonResponseWithUser jsonResponseWithUser = new JsonResponseWithUser(new Resp(200, "succes"), accountService.getUserOfSession(req.getSession().getId()) );
-            return new ResponseEntity<>(jsonResponseWithUser, HttpStatus.OK);
+    @RequestMapping(value = "/user/getInfoUser", method = RequestMethod.GET)
+    public ResponseEntity<?> getInfoUser() throws IOException {
+        if (session.getAttribute(KeyHelper.LOGIN) != null) {
+            Response<RespWithUser> response = new Response<>(new RespWithUser(200, (accountService.getUser((String)(session.getAttribute(KeyHelper.EMAIL)))), "User created successfully"));
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } else {
-            JsonResponseWithUser jsonResponseWithUser = new JsonResponseWithUser(new Resp(200, "succes"), null);
-            return new ResponseEntity<>(jsonResponseWithUser, HttpStatus.BAD_REQUEST);
+            Response<Resp> response= new Response<>(new Resp(200, "You don't login"));
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
 
 
     @RequestMapping(value = "/setInfoUser", method = RequestMethod.POST)
-    public ResponseEntity<JsonResponse> setInfoUser(RequestEntity<String> req, HttpSession session) throws IOException {
-        String reqBody = req.getBody();
-        Gson gson = new Gson();
-        UserProfile userProfile = gson.fromJson(reqBody, UserProfile.class);
-        if (accountService.isLogIn(session.getId())) {
-            accountService.getUserOfSession(session.getId()).setEmail(userProfile.getEmail());
-            accountService.getUserOfSession(session.getId()).setLogin(userProfile.getLogin());
-            accountService.getUserOfSession(session.getId()).setPassword(userProfile.getPassword());
-            JsonResponse jsonResponse = new JsonResponse(new Resp(200, "succes"));
-            return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
+    public ResponseEntity<?> setInfoUser(@RequestBody UserProfile userProfile) throws IOException {
+        if (session.getAttribute(KeyHelper.LOGIN) != null) {
+            accountService.getUser(userProfile.getEmail()).setLogin(userProfile.getLogin());
+            accountService.getUser(userProfile.getEmail()).setPassword(userProfile.getPassword());
+            Response<Resp> response= new Response<>(new Resp(200, "User data succesfully updated"));
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
-            JsonResponse jsonResponse = new JsonResponse(new Resp(200, "succes"));
-            return new ResponseEntity<>(jsonResponse, HttpStatus.BAD_REQUEST);
+            Response<Resp> response= new Response<>(new Resp(200, "Not all required parameters provided"));
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
 
-    @RequestMapping(value = "/signUp", method = RequestMethod.POST)
-    public ResponseEntity<JsonResponse> signUp(RequestEntity<String> req, HttpSession session) throws IOException {
-        String reqBody = req.getBody();
-        Gson gson = new Gson();
-        UserProfile userProfile = gson.fromJson(reqBody, UserProfile.class);
+    @RequestMapping(value = "/auth/regirstration", method = RequestMethod.POST)
+    public ResponseEntity<Response> signUp(@RequestBody UserProfile userProfile) throws IOException {
         if (userProfile.isEmpty()) {
-            JsonResponse jsonResponse = new JsonResponse(new Resp(200, "succes"));
-            return new ResponseEntity<>(jsonResponse, HttpStatus.CONFLICT);
+            Response<Resp> response= new Response<>(new Resp(200, "Not all required parameters provided"));
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
         if (accountService.isSignUp(userProfile.getEmail())) {
-            JsonResponse jsonResponse = new JsonResponse(new Resp(200, "succes"));
-            return new ResponseEntity<>(jsonResponse, HttpStatus.BAD_REQUEST);
+            Response<Resp> response = new Response<>(new Resp(200, "This user alredy exist"));
+            return new ResponseEntity<>(response, HttpStatus.CONFLICT);
         } else {
-            accountService.addSession(session.getId(), userProfile);
+            session.setAttribute(KeyHelper.LOGIN, true);
+            session.setAttribute(KeyHelper.EMAIL, userProfile.getEmail());
             accountService.addUser(userProfile);
-            JsonResponse jsonResponse = new JsonResponse(new Resp(200, "succes"));
-            return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
+            Response<RespWithUser> response = new Response<>(new RespWithUser(200, userProfile, "User created successfully"));
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         }
     }
+
 
     @Autowired
     public UserAuthController(AccountService accountService) {

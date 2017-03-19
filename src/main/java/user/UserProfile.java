@@ -1,9 +1,16 @@
 package user;
 
-public class UserProfile {
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.jws.soap.SOAPBinding;
+
+public class UserProfile implements Comparable<UserProfile> {
     private String login;
     private String password;
     private String email;
+
+    @JsonIgnore
+    private int rating = 0;
 
     public String getLogin() {
         return login;
@@ -21,10 +28,6 @@ public class UserProfile {
         this.login = login;
     }
 
-    public UserProfile(String login, String password) {
-        this.login = login;
-        this.password = password;
-    }
 
     public boolean isEmpty(){ return email == null; }
 
@@ -34,5 +37,24 @@ public class UserProfile {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    @Override
+    public int compareTo(UserProfile o) {
+        if (o.getRating() == rating){
+            return 0;
+        }else if (o.getRating() > rating){
+            return -1;
+        } else{
+            return 1;
+        }
     }
 }

@@ -14,12 +14,16 @@
 >     *Request:{ "email": "stark@north.io", "password": "TheWall" }
 
 >     *Response: {
-	            "response":		
-  	         	{
- 				"key":"200"
-				"message":"success"
-         	        }
-	          }
+                   "response": {
+                     "key": 200,
+                     "userProfile": {
+                       "login": "JohnSnow",
+                       "password": "TheWall",
+                       "email": "stark@north.io",
+                     },
+                     "message": "Logged in succesfully"
+                   }
+                 }
                   200 - пользоваель создан
                   400 - не зарегестрирован
                   409 - введены неправильные данные
@@ -30,34 +34,37 @@
 >    * Request: { "email": "stark@north.io", "username": "JohnSnow", "password": "TheWall" }
 
 >    * Responce:
-        {
-		"response":		
-  			{
-				"key":"200",
-				"message":"success"
-		}
-	}       
+             {
+               "response": {
+                 "key": 200,
+                 "userProfile": {
+                   "login": "JohnSnow",
+                   "password": "TheWall",
+                   "email": "stark@north.io",
+                 },
+                 "message": "User created successfully"
+               }
+             }    
          200 OK - удачная регистрация  
          400 Forbiden - уже зарегестрирован
-	 409 Bad request - Введены неправильные данные
+	     409 Bad request - Введены неправильные данные
 #### Получение пользователя текущей сессии  
 >* /getInfoUser
 
 >    * Request: 
             
 >    * Responce:{
-                  "response":		
-                    {
-                    "key":"200",
-                    "message":"success",
-		     "User":"
-                      {
-                        "login": "JohnSnow", 
-                        "password": "TheWall",
-                         "email": "stark@north.io"
-                    }”,
+                  "response": {
+                    "key": 200,
+                    "userProfile": {
+                      "login": "JohnSnow",
+                      "password": "TheWall",
+                      "email": "stark@north.io",
+                      "empty": false
+                    },
+                    "message": "User created successfully"
                   }
-                }  
+                }
              200 OK - удачная операция  
              400 Bad Request - не авторизовался 
 
@@ -68,12 +75,11 @@
 	    
 >    * Responce:
                   {
-                        "response":
-                        {
-                          "message": "you don't is login",
-                          "key":"400"
-                        }
-                   }            
+                    "response": {
+                      "key": 200,
+                      "message": "User data succesfully updated"
+                    }
+                  }         
                       200 OK - удачная операция  
                       400 Bad Request - не авторизовался
 #### Выход пользователя  
@@ -82,12 +88,11 @@
 >     * Request: 
 
 >     * Responce:	{
-                       	 "response":
-                       	 {
-                       	   "message": "you don't is login",
-                       	   "key":"400"
-                       	 }
-                   	}   
+                      "response": {
+                        "key": 200,
+                        "message": "succes"
+                      }
+                    }
 		   	200 OK - удачная операция  
 
 

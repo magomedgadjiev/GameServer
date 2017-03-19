@@ -1,4 +1,4 @@
-package jsonModels;
+package Models;
 
 /**
  * Created by magomed on 17.03.17.
