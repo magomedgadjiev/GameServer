@@ -1,9 +1,5 @@
 package user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.jws.soap.SOAPBinding;
-
 public class UserProfile {
     private String login;
     private String password;

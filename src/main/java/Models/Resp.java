@@ -1,8 +1,6 @@
 package Models;
 
-/**
- * Created by magomed on 17.03.17.
- */
+
 public class Resp {
     private int key;
 

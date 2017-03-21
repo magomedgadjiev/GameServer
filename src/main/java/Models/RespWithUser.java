@@ -2,9 +2,6 @@ package Models;
 
 import user.UserProfile;
 
-/**
- * Created by magomed on 17.03.17.
- */
 public class RespWithUser {
     private int key;
     private UserProfile userProfile;
