@@ -4,13 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.jws.soap.SOAPBinding;
 
-public class UserProfile implements Comparable<UserProfile> {
+public class UserProfile {
     private String login;
     private String password;
     private String email;
 
-    @JsonIgnore
-    private int rating = 0;
 
     public String getLogin() {
         return login;
@@ -39,22 +37,4 @@ public class UserProfile implements Comparable<UserProfile> {
         this.email = email;
     }
 
-    public int getRating() {
-        return rating;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
-
-    @Override
-    public int compareTo(UserProfile o) {
-        if (o.getRating() == rating){
-            return 0;
-        }else if (o.getRating() > rating){
-            return -1;
-        } else{
-            return 1;
-        }
-    }
 }

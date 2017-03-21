@@ -31,9 +31,4 @@ public class AccountService {
         }
         return false;
     }
-//
-//    public void sort(){
-//        List<UserProfile> userProfiles = (ArrayList<UserProfile>) profiles.values();
-//        Collections.sort(userProfiles);
-//    }
 }

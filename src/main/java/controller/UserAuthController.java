@@ -34,8 +34,7 @@ public class UserAuthController {
         if (session.getAttribute(LOGIN) != null) {
             session.invalidate();
         }
-        Response<Resp> response= new Response<>(new Resp(200, SUCCESS));
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(new Response<>(new Resp(200, SUCCESS)));
     }
 
     @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
@@ -48,10 +47,10 @@ public class UserAuthController {
             if (session.getAttribute(LOGIN) ==  null) {
                 session.setAttribute(LOGIN, true);
             }
-            Response<RespWithUser> response = new Response<>(new RespWithUser(200, accountService.getUser(userProfile.getEmail()), "Logged in succesfully"));
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.ok(new Response<>(new RespWithUser(200, accountService.getUser(userProfile.getEmail()), "Logged in succesfully")));
         } else {
-            return ResponseEntity.ok(new Resp(200, accountService.getUser(userProfile.getEmail()).toString()));
+            Response<Resp> response= new Response<>(new Resp(200, "You did't registration"));
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -72,8 +71,7 @@ public class UserAuthController {
         if (session.getAttribute(LOGIN) != null) {
             accountService.getUser(userProfile.getEmail()).setLogin(userProfile.getLogin());
             accountService.getUser(userProfile.getEmail()).setPassword(userProfile.getPassword());
-            Response<Resp> response= new Response<>(new Resp(200, "User data succesfully updated"));
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.ok(new Response<>(new Resp(200, "User data succesfully updated")));
         } else {
             Response<Resp> response= new Response<>(new Resp(200, "Not all required parameters provided"));
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
