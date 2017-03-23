@@ -18,6 +18,8 @@ public class AccountService {
         profiles.put(userProfile.getEmail(), userProfile);
     }
 
+    public int getSize(){ return profiles.size();}
+
     public UserProfile getUser(String id){
         return profiles.get(id);
     }
@@ -30,5 +32,11 @@ public class AccountService {
             }
         }
         return false;
+    }
+
+    public List<UserProfile> sort(){
+        List<UserProfile> userProfiles = (ArrayList<UserProfile>) profiles.values();
+        Collections.sort(userProfiles);
+        return userProfiles;
     }
 }

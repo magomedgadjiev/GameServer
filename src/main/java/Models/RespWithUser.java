@@ -5,12 +5,10 @@ import user.UserProfile;
 public class RespWithUser {
     private int key;
     private UserProfile userProfile;
-    private String message;
 
     public RespWithUser(int key, UserProfile userProfile, String message) {
         this.key = key;
         this.userProfile = userProfile;
-        this.message = message;
     }
 
     public RespWithUser(){
@@ -33,11 +31,4 @@ public class RespWithUser {
         this.key = key;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
 }
