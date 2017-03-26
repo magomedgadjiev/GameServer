@@ -13,7 +13,7 @@ public class RespWithUsers {
         this.userProfile = userProfile;
     }
 
-    public RespWithUsers(){
+    public RespWithUsers() {
         ;
     }
 
@@ -21,7 +21,9 @@ public class RespWithUsers {
         return userProfile;
     }
 
-    public void addUser(UserProfile userProfile){this.userProfile.add(userProfile);}
+    public void addUser(UserProfile userProfile) {
+        this.userProfile.add(userProfile);
+    }
 
     public void setUserProfile(List<UserProfile> userProfile) {
         this.userProfile = userProfile;

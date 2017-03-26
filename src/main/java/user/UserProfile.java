@@ -27,7 +27,9 @@ public class UserProfile implements Comparable<UserProfile> {
     }
 
 
-    public boolean isEmpty(){ return email == null; }
+    public boolean isEmpty() {
+        return email == null;
+    }
 
     public String getEmail() {
         return email;
@@ -47,11 +49,11 @@ public class UserProfile implements Comparable<UserProfile> {
 
     @Override
     public int compareTo(UserProfile o) {
-        if (o.getRating() == rating){
+        if (o.getRating() == rating) {
             return 0;
-        }else if (o.getRating() > rating){
+        } else if (o.getRating() > rating) {
             return 1;
-        } else{
+        } else {
             return -1;
         }
     }

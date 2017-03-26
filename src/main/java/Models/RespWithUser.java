@@ -6,12 +6,12 @@ public class RespWithUser {
     private int key;
     private UserProfile userProfile;
 
-    public RespWithUser(int key, UserProfile userProfile, String message) {
+    public RespWithUser(int key, UserProfile userProfile) {
         this.key = key;
         this.userProfile = userProfile;
     }
 
-    public RespWithUser(){
+    public RespWithUser() {
         ;
     }
 
