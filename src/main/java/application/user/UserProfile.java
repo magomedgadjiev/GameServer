@@ -1,14 +1,27 @@
-package user;
+package application.user;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class UserProfile implements Comparable<UserProfile> {
+public class UserProfile {
     private String login;
     private String password;
     private String email;
 
     @JsonIgnore
     private int rating = 0;
+
+    @JsonCreator
+    public UserProfile(@JsonProperty("login") String login, @JsonProperty("password")String password, @JsonProperty("email")String email) {
+        this.login = login;
+        this.password = password;
+        this.email = email;
+    }
+
+    public UserProfile() {
+        ;
+    }
 
     public String getLogin() {
         return login;
@@ -47,14 +60,4 @@ public class UserProfile implements Comparable<UserProfile> {
         this.rating = rating;
     }
 
-    @Override
-    public int compareTo(UserProfile o) {
-        if (o.getRating() == rating) {
-            return 0;
-        } else if (o.getRating() > rating) {
-            return 1;
-        } else {
-            return -1;
-        }
-    }
 }

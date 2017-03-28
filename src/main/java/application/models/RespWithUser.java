@@ -1,19 +1,20 @@
-package Models;
+package application.models;
 
-import user.UserProfile;
+import application.user.UserProfile;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 public class RespWithUser {
     private int key;
     private UserProfile userProfile;
 
-    public RespWithUser(int key, UserProfile userProfile) {
+    @JsonCreator
+    public RespWithUser(@JsonProperty("key") int key,@JsonProperty("user") UserProfile userProfile) {
         this.key = key;
         this.userProfile = userProfile;
     }
 
-    public RespWithUser() {
-        ;
-    }
 
     public UserProfile getUserProfile() {
         return userProfile;
@@ -23,9 +24,7 @@ public class RespWithUser {
         this.userProfile = userProfile;
     }
 
-    public int getKey() {
-        return key;
-    }
+    public int getKey() {return key;}
 
     public void setKey(int key) {
         this.key = key;
