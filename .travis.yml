@@ -13,7 +13,6 @@ addons :
     password: 123
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
-  - rake db:migrate
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 install: true
 cache:
