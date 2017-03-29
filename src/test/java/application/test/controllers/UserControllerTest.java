@@ -33,30 +33,26 @@ public class UserControllerTest {
     @Test
     public void testMeRequiresLogin() {
         UserProfile userProfile = new UserProfile("login", "password", "email");
-        ResponseEntity<UserProfile> meResp = restTemplate.postForEntity("/api/auth/regirstration", userProfile, UserProfile.class);
+        ResponseEntity<UserProfile> meResp = restTemplate.postForEntity("/api/DB/auth/regirstration", userProfile, UserProfile.class);
         assertEquals(HttpStatus.CREATED, meResp.getStatusCode());
-
-
 
         UserProfile userProfile1 = new UserProfile("aa", "dd", "email");
 
-
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity("/api/auth/signOut", String.class);
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity("/api/DB/auth/signOut", String.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         UserProfile userProfile2 = new UserProfile();
         userProfile2.setLogin("a");
         userProfile2.setPassword("a");
-        responseEntity = restTemplate.postForEntity("/api/auth/regirstration", userProfile2, String.class);
+        responseEntity = restTemplate.postForEntity("/api/DB/auth/regirstration", userProfile2, String.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
-        responseEntity = restTemplate.postForEntity("/api/auth/login", userProfile2, String.class);
+        responseEntity = restTemplate.postForEntity("/api/DB/auth/login", userProfile2, String.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
-        responseEntity = restTemplate.postForEntity("/api/user/setInfoUser", userProfile2, String.class);
+        responseEntity = restTemplate.postForEntity("/api/DB/user/setInfoUser", userProfile2, String.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
-
-        responseEntity = restTemplate.getForEntity("/api/user/getInfoUser", String.class);
+        responseEntity = restTemplate.getForEntity("/api/DB/user/getInfoUser", String.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 }
