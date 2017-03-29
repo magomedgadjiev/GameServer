@@ -6,10 +6,15 @@ services:
 
 addons :
   postgresql : " 9.4"
+  postgres:
+    adapter: postgresql
+    database: travis_ci_test
+    username: postgres
+    password: 123
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
+  - rake db:migrate
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-  - cp config/database.yml
 install: true
 cache:
   directories:
