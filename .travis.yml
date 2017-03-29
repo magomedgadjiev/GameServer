@@ -3,4 +3,7 @@ jdk: oraclejdk8
 sudo: false
 before_script: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 install: true
-script: ./mvnw clean install
+cache:
+  directories:
+  - $HOME/.m2
+script: mvnw clean install
