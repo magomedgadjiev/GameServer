@@ -46,7 +46,6 @@ public class UserControllerTest {
         UserProfile userProfile2 = new UserProfile();
         userProfile2.setLogin("a");
         userProfile2.setPassword("a");
-        assertEquals(1,2);
         responseEntity = restTemplate.postForEntity("/api/auth/regirstration", userProfile2, String.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
