@@ -1,7 +1,15 @@
 language: java
 jdk: oraclejdk8
 sudo: false
-before_script: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+services:
+  - postgresql
+
+addons :
+  postgresql : " 9.4"
+before_script:
+  - psql -c 'create database travis_ci_test;' -U postgres
+  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+  - cp config/database.yml
 install: true
 cache:
   directories:

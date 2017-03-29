@@ -25,7 +25,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @RunWith(SpringRunner.class)
 public class UserControllerTest {
     @MockBean
-    private AccountService accountService;
+    private AccountService accountServic;
 
     @Autowired
     private TestRestTemplate restTemplate;
