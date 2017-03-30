@@ -1,25 +1,16 @@
 package application.test.controllers;
 
 import application.accountService.AccountService;
-import application.controller.UserControllerWithDB;
 import application.user.UserProfile;
-import org.eclipse.jetty.server.Authentication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.context.annotation.RequestScope;
 
-
-import javax.jws.soap.SOAPBinding;
-
-import java.io.IOException;
 
 import static org.junit.Assert.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -27,7 +18,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 /**
  * Created by isopov on 29.09.16.
  */
-@ConfigurationProperties("spring.datasource")
+
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @RunWith(SpringRunner.class)
 public class UserControllerTest {
