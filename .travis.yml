@@ -19,3 +19,10 @@ cache:
   directories:
   - $HOME/.m2
 script: mvn clean install
+
+deploy:
+  provider: heroku
+  api_key: 1d811ba1-103d-4a4b-812a-b518ccb18a52
+  app: dnoteam
+  on:
+    repo: magomedgadjiev/dno-team-02-2017
