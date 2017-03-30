@@ -1,13 +1,13 @@
-package accountService;
+package application.accountService;
 
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import user.UserProfile;
+import application.user.UserProfile;
 
 import java.util.*;
 
 
-@Service(value = "singleton")
+@Service
 @Component
 public class AccountService {
     private Map<String, UserProfile> profiles = new HashMap<String, UserProfile>();
@@ -25,10 +25,10 @@ public class AccountService {
         return profiles.get(id);
     }
 
-    public boolean isSignUp(String email) {
+    public boolean isSignUp(String email, String password) {
         Set<Map.Entry<String, UserProfile>> set = profiles.entrySet();
         for (Map.Entry<String, UserProfile> profile : set) {
-            if (profile.getValue().getEmail().equals(email)) {
+            if (profile.getValue().getEmail().equals(email) && profile.getValue().getPassword().equals(password)) {
                 return true;
             }
         }
@@ -37,7 +37,18 @@ public class AccountService {
 
     public List<UserProfile> sort() {
         List<UserProfile> userProfiles = (ArrayList<UserProfile>) profiles.values();
-        Collections.sort(userProfiles);
+        Collections.sort(userProfiles, new Comparator<UserProfile>() {
+            @Override
+            public int compare(UserProfile o1, UserProfile o2) {
+                if (o2.getRating() == o1.getRating()) {
+                    return 0;
+                } else if (o2.getRating() > o1.getRating()) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        });
         return userProfiles;
     }
 }

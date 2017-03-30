@@ -1,21 +1,12 @@
-package Models;
+package application.models;
 
-import user.UserProfile;
+import application.user.UserProfile;
 
 import java.util.List;
 
 public class RespWithUsers {
     private int key;
     private List<UserProfile> userProfile;
-
-    public RespWithUsers(int key, List<UserProfile> userProfile, String message) {
-        this.key = key;
-        this.userProfile = userProfile;
-    }
-
-    public RespWithUsers() {
-        ;
-    }
 
     public List<UserProfile> getUserProfile() {
         return userProfile;
