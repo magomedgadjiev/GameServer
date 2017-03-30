@@ -25,10 +25,10 @@ public class AccountService {
         return profiles.get(id);
     }
 
-    public boolean isSignUp(String email) {
+    public boolean isSignUp(String email, String password) {
         Set<Map.Entry<String, UserProfile>> set = profiles.entrySet();
         for (Map.Entry<String, UserProfile> profile : set) {
-            if (profile.getValue().getEmail().equals(email)) {
+            if (profile.getValue().getEmail().equals(email) && profile.getValue().getPassword().equals(password)) {
                 return true;
             }
         }

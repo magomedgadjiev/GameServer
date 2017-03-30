@@ -15,7 +15,6 @@ public class RespWithUser {
         this.userProfile = userProfile;
     }
 
-
     public UserProfile getUserProfile() {
         return userProfile;
     }

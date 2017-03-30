@@ -47,10 +47,11 @@ public class UserController {
     public ResponseEntity<?> signIn(@RequestBody UserProfile userProfile) throws IOException {
         try {
             if (userProfile.isEmpty()) {
+                session.invalidate();
                 LOGGER.debug("Not all required parameters provided");
                 return new ResponseEntity<>(new Resp(2, "Not all required parameters provided"), HttpStatus.BAD_REQUEST);
             }
-            if (accountService.isSignUp(userProfile.getEmail())) {
+            if (accountService.isSignUp(userProfile.getEmail(), userProfile.getPassword())) {
                 if (session.getAttribute(LOGIN) == null) {
                     session.setAttribute(LOGIN, true);
                     session.setAttribute(EMAIL, userProfile.getEmail());
@@ -58,6 +59,7 @@ public class UserController {
                 LOGGER.debug("Success login");
                 return ResponseEntity.ok(new RespWithUser(0, accountService.getUser(userProfile.getEmail())));
             }
+            session.invalidate();
             LOGGER.debug("did't registration");
             return new ResponseEntity<>(new Resp(1, "You did't registration"), HttpStatus.BAD_REQUEST);
 
@@ -109,11 +111,12 @@ public class UserController {
         try {
             if (userProfile.isEmpty()) {
                 LOGGER.debug("Not all required parameters provided");
+                session.invalidate();
                 return new ResponseEntity<>(new Resp(2, "Not all required parameters provided"), HttpStatus.BAD_REQUEST);
             }
-
-            if (accountService.isSignUp(userProfile.getEmail())) {
+            if (accountService.isSignUp(userProfile.getEmail(), userProfile.getPassword())) {
                 LOGGER.debug("This application.user alredy exist");
+                session.invalidate();
                 return new ResponseEntity<>(new Resp(3, "This application.user alredy exist"), HttpStatus.CONFLICT);
             }
             session.setAttribute(LOGIN, true);
