@@ -3,7 +3,6 @@ package application.test.service;
 import application.accountService.AccountService;
 import org.junit.Before;
 import org.junit.Test;
-import application.user.UserProfile;
 import static org.junit.Assert.*;
 
 

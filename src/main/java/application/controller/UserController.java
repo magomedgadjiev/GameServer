@@ -7,7 +7,6 @@ import application.models.RespWithUsers;
 import application.accountService.AccountService;
 import application.models.RespWithUser;
 import application.models.Resp;
-import com.fasterxml.jackson.core.JsonParseException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,16 +25,12 @@ public class UserController {
     public static final String LOGIN = "logIn";
     public static final String SUCCESS = "success";
 
-    private final static Logger LOGGER = Logger.getLogger("maga");
+    private static final Logger LOGGER = Logger.getLogger("maga");
 
-    @Autowired
     private final AccountService accountService;
 
-    @Autowired
-    private HttpSession session;
-
     @RequestMapping(value = "/auth/signOut", method = RequestMethod.GET)
-    public ResponseEntity<?> signOut() throws IOException {
+    public ResponseEntity<?> signOut(HttpSession session) throws IOException {
         if (session.getAttribute(LOGIN) != null) {
             session.invalidate();
         }
@@ -44,7 +39,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
-    public ResponseEntity<?> signIn(@RequestBody UserProfile userProfile) throws IOException {
+    public ResponseEntity<?> signIn(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
             if (userProfile.isEmpty()) {
                 LOGGER.debug("Not all required parameters provided");
@@ -63,12 +58,12 @@ public class UserController {
 
         } catch (RuntimeException ignored) {
             LOGGER.debug("Iternal server error");
-            return new ResponseEntity<Resp>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @RequestMapping(value = "/user/getInfoUser", method = RequestMethod.GET)
-    public ResponseEntity<?> getInfoUser() throws IOException {
+    public ResponseEntity<?> getInfoUser(HttpSession session) throws IOException {
         try {
             if (session.getAttribute(LOGIN) != null) {
                 LOGGER.debug("Success get info user");
@@ -78,13 +73,13 @@ public class UserController {
             return new ResponseEntity<>(new Resp(1, "You don't login"), HttpStatus.BAD_REQUEST);
         } catch (RuntimeException ignored) {
             LOGGER.debug("Iternal server error");
-            return new ResponseEntity<Resp>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
 
     @RequestMapping(value = "/user/setInfoUser", method = RequestMethod.POST)
-    public ResponseEntity<?> setInfoUser(@RequestBody UserProfile userProfile) throws IOException {
+    public ResponseEntity<?> setInfoUser(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
             if (session.getAttribute(LOGIN) != null) {
                 if (userProfile.isEmpty()) {
@@ -97,15 +92,15 @@ public class UserController {
                 return new ResponseEntity<>(new Resp(2, "Not all required parameters provided"), HttpStatus.BAD_REQUEST);
             }
             LOGGER.debug("don't login");
-            return new ResponseEntity<Resp>(new Resp(1, "you don't login"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new Resp(1, "you don't login"), HttpStatus.BAD_REQUEST);
         } catch (RuntimeException ignored) {
             LOGGER.debug("Iternal server error");
-            return new ResponseEntity<Resp>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @RequestMapping(value = "/auth/regirstration", method = RequestMethod.POST)
-    public ResponseEntity<?> signUp(@RequestBody UserProfile userProfile) throws IOException, JsonParseException {
+    public ResponseEntity<?> signUp(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
             if (userProfile.isEmpty()) {
                 LOGGER.debug("Not all required parameters provided");
@@ -119,21 +114,21 @@ public class UserController {
             session.setAttribute(EMAIL, userProfile.getEmail());
             accountService.addUser(userProfile);
             LOGGER.debug("Success registration" + session.getId());
-            return new ResponseEntity<RespWithUser>(new RespWithUser(0, userProfile), HttpStatus.CREATED);
+            return new ResponseEntity<>(new RespWithUser(0, userProfile), HttpStatus.CREATED);
         } catch (RuntimeException ignored) {
             LOGGER.debug("Iternal server error");
-            return new ResponseEntity<Resp>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @RequestMapping(value = "/stats/{count}", method = RequestMethod.POST)
-    public ResponseEntity<?> getMMR(@PathVariable(value = "count") int count, @RequestBody UserProfile userProfile) throws IOException {
+    @RequestMapping(value = "/stats/{count}", method = RequestMethod.GET)
+    public ResponseEntity<?> getMMR(@PathVariable(value = "count") int count) throws IOException {
         try {
             if (count > accountService.getSize()) {
-                return new ResponseEntity<Resp>(new Resp(1, "count > countUser"), HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(new Resp(1, "count > countUser"), HttpStatus.BAD_REQUEST);
             }
-            List<UserProfile> userProfiles = accountService.sort();
-            RespWithUsers respWithUsers = new RespWithUsers();
+            final List<UserProfile> userProfiles = accountService.sort();
+            final RespWithUsers respWithUsers = new RespWithUsers();
             for (int i = 0; i < count; ++i) {
                 respWithUsers.addUser(userProfiles.get(i));
             }
@@ -143,7 +138,7 @@ public class UserController {
 
         } catch (RuntimeException ignored) {
             LOGGER.debug("Iternal server error");
-            return new ResponseEntity<Resp>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

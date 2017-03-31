@@ -1,19 +1,26 @@
 package application.test.controllers;
 
-import application.accountService.AccountService;
+import application.controller.UserControllerWithDB;
 import application.user.UserProfile;
+import com.google.gson.Gson;
+
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrint;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 
-
-import static org.junit.Assert.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
@@ -22,42 +29,57 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @RunWith(SpringRunner.class)
+@AutoConfigureMockMvc(print = MockMvcPrint.NONE)
 public class UserControllerTest {
-
-    @Autowired
-    private TestRestTemplate restTemplate;
 
     private UserProfile userProfile;
 
+    @Autowired
+    private MockMvc mockMvc;
+
+    MockHttpSession session = new MockHttpSession();
 
     @Before
-    public void init(){
+    public void init() {
         userProfile = new UserProfile("login", "password", "email");
     }
 
     @Test
-    public void testMeRequiresLogin() {
-        UserProfile userProfile = new UserProfile("login", "password", "email");
-        ResponseEntity<UserProfile> meResp = restTemplate.postForEntity("/api/DB/auth/regirstration", userProfile, UserProfile.class);
-        assertEquals(HttpStatus.CREATED, meResp.getStatusCode());
+    public void testMeRequiresLogin() throws Exception {
+        final Gson gson = new Gson();
+        mockMvc.perform(post("/api/DB/auth/regirstration")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(userProfile))).andExpect(status().isCreated());
 
-        UserProfile userProfile1 = new UserProfile("aa", "dd", "email");
+        session.setAttribute(UserControllerWithDB.EMAIL, userProfile.getEmail());
+        session.setAttribute(UserControllerWithDB.LOGIN, true);
 
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity("/api/DB/auth/signOut", String.class);
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        UserProfile userProfile2 = new UserProfile();
+        mockMvc.perform(get("/api/DB/user/getInfoUser")
+                .session(session)
+        ).andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/DB/auth/signOut")
+        ).andExpect(status().isOk());
+
+
+        final UserProfile userProfile1 = new UserProfile("aa", "dd", "email");
+        final UserProfile userProfile2 = new UserProfile();
         userProfile2.setLogin("a");
         userProfile2.setPassword("a");
-        responseEntity = restTemplate.postForEntity("/api/DB/auth/regirstration", userProfile2, String.class);
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        mockMvc.perform(post("/api/DB/auth/regirstration")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(userProfile2))
+        ).andExpect(status().isBadRequest());
 
-        responseEntity = restTemplate.postForEntity("/api/DB/auth/login", userProfile2, String.class);
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        mockMvc.perform(post("/api/DB/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(userProfile))
+        ).andExpect(status().isOk());
 
-        responseEntity = restTemplate.postForEntity("/api/DB/user/setInfoUser", userProfile2, String.class);
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-
-        responseEntity = restTemplate.getForEntity("/api/DB/user/getInfoUser", String.class);
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        mockMvc.perform(post("/api/DB/user/setInfoUser")
+                .session(session)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(userProfile1))
+        ).andExpect(status().isOk());
     }
 }

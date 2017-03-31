@@ -1,0 +1,28 @@
+language: java
+jdk: oraclejdk8
+sudo: false
+services:
+  - postgresql
+
+addons :
+  postgresql : " 9.4"
+  postgres:
+    adapter: postgresql
+    database: travis_ci_test
+    username: postgres
+    password: 123
+before_script:
+  - psql -c 'create database travis_ci_test;' -U postgres
+  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+install: true
+cache:
+  directories:
+  - $HOME/.m2
+script: mvn clean install
+
+deploy:
+  provider: heroku
+  api_key: 1d811ba1-103d-4a4b-812a-b518ccb18a52
+  app: dnoteam
+  on:
+    repo: magomedgadjiev/dno-team-02-2017

@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 public class UserTest {
     @Test
     public void test(){
-        UserProfile userProfile = new UserProfile();
+        final UserProfile userProfile = new UserProfile();
         userProfile.setEmail("avenger@mail.ru");
         assertEquals("avenger@mail.ru", userProfile.getEmail());
     }

@@ -23,7 +23,9 @@ public class RespWithUser {
         this.userProfile = userProfile;
     }
 
-    public int getKey() {return key;}
+    public int getKey() {
+        return key;
+    }
 
     public void setKey(int key) {
         this.key = key;
