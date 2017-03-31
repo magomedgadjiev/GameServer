@@ -26,7 +26,8 @@ public class AccountService {
     }
 
     public boolean isSignUp(String email, String password) {
-        return profiles.get(email).getPassword().equals(password);
+        final UserProfile userProfile = profiles.get(email);
+        return userProfile != null && userProfile.getPassword().equals(password);
     }
 
     public List<UserProfile> sort() {
