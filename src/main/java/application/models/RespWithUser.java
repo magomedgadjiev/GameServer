@@ -10,7 +10,7 @@ public class RespWithUser {
     private UserProfile userProfile;
 
     @JsonCreator
-    public RespWithUser(@JsonProperty("key") int key,@JsonProperty("user") UserProfile userProfile) {
+    public RespWithUser(@JsonProperty("key") int key, @JsonProperty("user") UserProfile userProfile) {
         this.key = key;
         this.userProfile = userProfile;
     }
@@ -23,7 +23,9 @@ public class RespWithUser {
         this.userProfile = userProfile;
     }
 
-    public int getKey() {return key;}
+    public int getKey() {
+        return key;
+    }
 
     public void setKey(int key) {
         this.key = key;
