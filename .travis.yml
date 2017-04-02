@@ -11,6 +11,11 @@ addons :
     database: travis_ci_test
     username: postgres
     password: 123
+
+branches:
+  only:
+    - master
+
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V

@@ -12,8 +12,8 @@ public class RespWithUsers {
         return userProfile;
     }
 
-    public void addUser(UserProfile userProfile) {
-        this.userProfile.add(userProfile);
+    public void addUser(UserProfile u) {
+        this.userProfile.add(u);
     }
 
     public void setUserProfile(List<UserProfile> userProfile) {
@@ -24,7 +24,7 @@ public class RespWithUsers {
         return key;
     }
 
-    public void setKey(int key) {
-        this.key = key;
+    public void setKey(int k) {
+        this.key = k;
     }
 }
