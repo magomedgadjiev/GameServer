@@ -6,6 +6,7 @@ import java.util.List;
 
 public class RespWithUsers {
     private int key;
+    
     private List<UserProfile> userProfile;
 
     public List<UserProfile> getUserProfile() {
@@ -24,7 +25,7 @@ public class RespWithUsers {
         return key;
     }
 
-    public void setKey(int k) {
-        this.key = k;
+    public void setKey(int key) {
+        this.key = key;
     }
 }
