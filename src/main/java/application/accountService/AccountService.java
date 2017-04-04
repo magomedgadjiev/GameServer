@@ -10,7 +10,7 @@ import java.util.*;
 @Service
 @Component
 public class AccountService {
-    private Map<String, UserProfile> profiles = new HashMap<>();
+    private Map<String, UserProfile> profiles = new HashMap<String, UserProfile>();
 
 
     public void addUser(UserProfile userProfile) {
@@ -26,19 +26,27 @@ public class AccountService {
     }
 
     public boolean isSignUp(String email, String password) {
-        final UserProfile userProfile = profiles.get(email);
-        return userProfile != null && userProfile.getPassword().equals(password);
+        Set<Map.Entry<String, UserProfile>> set = profiles.entrySet();
+        for (Map.Entry<String, UserProfile> profile : set) {
+            if (profile.getValue().getEmail().equals(email) && profile.getValue().getPassword().equals(password)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<UserProfile> sort() {
-        final List<UserProfile> userProfiles = (ArrayList<UserProfile>) profiles.values();
-        userProfiles.sort((o1, o2) -> {
-            if (o2.getRating() == o1.getRating()) {
-                return 0;
-            } else if (o2.getRating() > o1.getRating()) {
-                return 1;
-            } else {
-                return -1;
+        List<UserProfile> userProfiles = (ArrayList<UserProfile>) profiles.values();
+        Collections.sort(userProfiles, new Comparator<UserProfile>() {
+            @Override
+            public int compare(UserProfile o1, UserProfile o2) {
+                if (o2.getRating() == o1.getRating()) {
+                    return 0;
+                } else if (o2.getRating() > o1.getRating()) {
+                    return 1;
+                } else {
+                    return -1;
+                }
             }
         });
         return userProfiles;
