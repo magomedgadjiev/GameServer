@@ -6,14 +6,15 @@ import java.util.List;
 
 public class RespWithUsers {
     private int key;
+
     private List<UserProfile> userProfile;
 
     public List<UserProfile> getUserProfile() {
         return userProfile;
     }
 
-    public void addUser(UserProfile userProfile) {
-        this.userProfile.add(userProfile);
+    public void addUser(UserProfile u) {
+        this.userProfile.add(u);
     }
 
     public void setUserProfile(List<UserProfile> userProfile) {
