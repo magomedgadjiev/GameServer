@@ -47,7 +47,7 @@
 >      * Responce:	
             {
                "key": 4,
-               "message": "Iternal server error"
+               "message": "Internal server error"
             }       
 		  
 #### Регистрация пользователя 
@@ -89,7 +89,7 @@
 >      * Responce:	
             {
                "key": 4,
-               "message": "Iternal server error"
+               "message": "Internal server error"
             } 
             
 #### Получение пользователя текущей сессии  
@@ -123,7 +123,7 @@
 >      * Responce:	
             {
                "key": 4,
-               "message": "Iternal server error"
+               "message": "Internal server error"
             } 
             
 
@@ -171,7 +171,7 @@
 >      * Responce:	
             {
                "key": 4,
-               "message": "Iternal server error"
+               "message": "Internal server error"
             } 
             
                       
@@ -221,7 +221,7 @@
 >      * Responce:	
             {
                "key": 4,
-               "message": "Iternal server error"
+               "message": "Internal server error"
             } 
             
 

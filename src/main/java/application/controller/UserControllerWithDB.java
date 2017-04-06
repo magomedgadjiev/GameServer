@@ -61,7 +61,7 @@ public class UserControllerWithDB {
             return new ResponseEntity<>(new Resp(1, "You did't registration"), HttpStatus.BAD_REQUEST);
         } catch (RuntimeException ignored) {
             LOGGER.debug("Iternal server error");
-            return new ResponseEntity<>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new Resp(4, "Internal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -76,7 +76,7 @@ public class UserControllerWithDB {
             return new ResponseEntity<>(new Resp(1, "You don't login"), HttpStatus.BAD_REQUEST);
         } catch (RuntimeException ignored) {
             LOGGER.debug("Iternal server error");
-            return new ResponseEntity<>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new Resp(4, "Internal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -106,7 +106,7 @@ public class UserControllerWithDB {
             return new ResponseEntity<>(new Resp(3, "This user already exist"), HttpStatus.CONFLICT);
         } catch (RuntimeException ignored) {
             LOGGER.debug("Iternal server error");
-            return new ResponseEntity<>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new Resp(4, "Internal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -127,7 +127,7 @@ public class UserControllerWithDB {
             return new ResponseEntity<>(new Resp(3, "This user alredy exist"), HttpStatus.CONFLICT);
         } catch (RuntimeException ignored) {
             LOGGER.debug("Iternal server error");
-            return new ResponseEntity<>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new Resp(4, "Internal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -156,7 +156,7 @@ public class UserControllerWithDB {
             return ResponseEntity.ok(respWithUsers);
         } catch (RuntimeException ignored) {
             LOGGER.debug("Iternal server error");
-            return new ResponseEntity<>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new Resp(4, "Internal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

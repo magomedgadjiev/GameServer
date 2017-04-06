@@ -58,7 +58,7 @@ public class UserController {
 
         } catch (RuntimeException ignored) {
             LOGGER.debug("Iternal server error");
-            return new ResponseEntity<>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new Resp(4, "Internal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -73,7 +73,7 @@ public class UserController {
             return new ResponseEntity<>(new Resp(1, "You don't login"), HttpStatus.BAD_REQUEST);
         } catch (RuntimeException ignored) {
             LOGGER.debug("Iternal server error");
-            return new ResponseEntity<>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new Resp(4, "Internal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -95,7 +95,7 @@ public class UserController {
             return new ResponseEntity<>(new Resp(1, "you don't login"), HttpStatus.BAD_REQUEST);
         } catch (RuntimeException ignored) {
             LOGGER.debug("Iternal server error");
-            return new ResponseEntity<>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new Resp(4, "Internal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -117,7 +117,7 @@ public class UserController {
             return new ResponseEntity<>(new RespWithUser(0, userProfile), HttpStatus.CREATED);
         } catch (RuntimeException ignored) {
             LOGGER.debug("Iternal server error");
-            return new ResponseEntity<>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new Resp(4, "Internal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -138,7 +138,7 @@ public class UserController {
 
         } catch (RuntimeException ignored) {
             LOGGER.debug("Iternal server error");
-            return new ResponseEntity<>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new Resp(4, "Internal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
