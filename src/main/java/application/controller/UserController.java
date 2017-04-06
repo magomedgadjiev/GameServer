@@ -73,7 +73,7 @@ public class UserController {
             return new ResponseEntity<>(new Resp(1, "You don't login"), HttpStatus.BAD_REQUEST);
         } catch (RuntimeException ignored) {
             LOGGER.debug("Internal server error");
-            return new ResponseEntity<>(new Resp(4, "Internal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -94,8 +94,8 @@ public class UserController {
             LOGGER.debug("don't login");
             return new ResponseEntity<>(new Resp(1, "you don't login"), HttpStatus.BAD_REQUEST);
         } catch (RuntimeException ignored) {
-            LOGGER.debug("Internal server error");
-            return new ResponseEntity<>(new Resp(4, "Internal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            LOGGER.debug("Iternal server error");
+            return new ResponseEntity<>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
