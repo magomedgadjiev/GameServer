@@ -8,93 +8,225 @@
   * **Гаджиев Магомед**
 
 ## API
-###  /auth
 #### Авторизация пользователя.
->* /SignIn
->     *Request:{ "email": "stark@north.io", "password": "TheWall" }
+#####POST
+>* /api/DB/auth/login
 
->     *Response: {
-                   "response": {
-                     "key": 200,
-                     "userProfile": {
-                       "login": "JohnSnow",
-                       "password": "TheWall",
-                       "email": "stark@north.io",
-                     },
-                     "message": "Logged in succesfully"
-                   }
+>* Request:{ "email": "stark@north.io", "password": "TheWall" }
+
+>     * 200 - запрос успешно выполнен
+
+>      * Response: {
+                    "key": 0,
+                    "userProfile": 
+                    {
+                        "login": "JohnSnow",
+                        "password": "TheWall",
+                        "email": "stark@north.io",
+                    }   
                  }
-                  200 - пользоваель создан
-                  400 - не зарегестрирован
-                  409 - введены неправильные данные
-		  
-#### Регистрация пользователя  
->* /signUp
 
->    * Request: { "email": "stark@north.io", "username": "JohnSnow", "password": "TheWall" }
+>     * 400 - введены неправильные данные
 
->    * Responce:
-             {
-               "response": {
-                 "key": 200,
-                 "userProfile": {
-                   "login": "JohnSnow",
-                   "password": "TheWall",
-                   "email": "stark@north.io",
-                 },
-                 "message": "User created successfully"
-               }
-             }    
-         200 OK - удачная регистрация  
-         400 Forbiden - уже зарегестрирован
-	     409 Bad request - Введены неправильные данные
-#### Получение пользователя текущей сессии  
->* /getInfoUser
-
->    * Request: 
+>      * Responce:	
+            {
+               "key": 2,
+               "message": "Not all required parameters provided"
+            }
             
->    * Responce:{
-                  "response": {
-                    "key": 200,
-                    "userProfile": {
-                      "login": "JohnSnow",
-                      "password": "TheWall",
-                      "email": "stark@north.io",
-                      "empty": false
-                    },
-                    "message": "User created successfully"
-                  }
-                }
-             200 OK - удачная операция  
-             400 Bad Request - не авторизовался 
+>     * 400 - не зарегестрирован
 
-#### Обновление информации о пользователе  
->* /setInfoUser
+>      * Responce:	
+            {
+               "key": 1,
+               "message": "You did't registration"
+            }       
+                 
+>     * 500 - ошибка сервера
 
->    * Request:{"login":"login1", "password":"prevpass","newpassword":"passnew"},
-	    
->    * Responce:
-                  {
-                    "response": {
-                      "key": 200,
-                      "message": "User data succesfully updated"
-                    }
-                  }         
-                      200 OK - удачная операция  
-                      400 Bad Request - не авторизовался
+>      * Responce:	
+            {
+               "key": 4,
+               "message": "Iternal server error"
+            }       
+		  
+#### Регистрация пользователя 
+#####POST
+>* /api/DB/auth/regirstration
+
+>* Request: { "email": "stark@north.io", "username": "JohnSnow", "password": "TheWall" }
+
+>     * 200 - запрос успешно выполнен
+
+>      * Response: {
+                    "key": 0,
+                    "userProfiles": 
+                    {
+                        "login": "JohnSnow",
+                        "password": "TheWall",
+                        "email": "stark@north.io",
+                    }   
+                 } 
+             
+>     *400 - введены неправильные данные
+
+>      * Responce:	
+            {
+               "key": 2,
+               "message": "Not all required parameters provided"
+            }
+    
+>     *409 - пользователь с такими данными уже существует
+
+>      * Responce:	
+            {
+               "key": 3,
+               "message": "This user already exist"
+            }
+                
+>     *500 - ошибка сервера
+
+>      * Responce:	
+            {
+               "key": 4,
+               "message": "Iternal server error"
+            } 
+            
+#### Получение пользователя текущей сессии  
+#####GET
+>* /api/DB/getInfoUser
+
+>* Request: 
+            
+>     * 200 - запрос успешно выполнен
+            
+>      * Response: {
+                    "key": 0,
+                    "userProfile": 
+                    {
+                        "login": "JohnSnow",
+                        "password": "TheWall",
+                        "email": "stark@north.io"
+                    }   
+                 }
+
+>     * 400 - не залогирован
+
+>      * Responce:	
+            {
+               "key": 1,
+               "message": "You did't login"
+            }   
+            
+>     * 500 - ошибка сервер
+
+>      * Responce:	
+            {
+               "key": 4,
+               "message": "Iternal server error"
+            } 
+            
+
+#### Обновление информации о пользователе 
+#####POST
+
+>* /api/DB//user/setInfoUser
+
+>* Request:{"login":"login1", "password":"prevpass","newpassword":"passnew"},
+	   
+>    * 200 - запрос успешно выполнен
+
+>     * Responce:
+            {
+               "key": 0,
+               "message": "User data succesfully updated"
+            }     
+               
+>    * 400 - не залогирован
+
+>     * Responce:	
+            {
+               "key": 1,
+               "message": "You did't login"
+            }   
+
+>    * 400 - введены неправильные данные
+
+>     * Responce:	
+            {
+               "key": 2,
+               "message": "Not all required parameters provided"
+            }
+
+>    * 409 - пользователь с такими данными уже существует
+
+>      * Responce:	
+            {
+               "key": 3,
+               "message": "This user already exist"
+            }
+           
+>    * 500 - ошибка сервера
+
+>      * Responce:	
+            {
+               "key": 4,
+               "message": "Iternal server error"
+            } 
+            
+                      
+                      
 #### Выход пользователя  
->* /signOut
+#####GET
+>* /api/DB/auth/signOut
 
->     * Request: 
+>* Request: 
 
->     * Responce:	{
-                      "response": {
-                        "key": 200,
-                        "message": "succes"
-                      }
-                    }
-		   	200 OK - удачная операция  
+>    * 200 - запрос успешно выполнен
+
+>     * Responce:
+            {
+               "key": 0,
+               "message": "success"
+            }     
+                     
+#### Получение рейтинга
+#####GET
+>* /api/DB/stats/{count}
+
+>* Request: 
+            
+>     * 200 - запрос успешно выполнен
+            
+>      * Response: {
+                    "key": 0,
+                    "userProfiles": 
+                    [
+                        "login": "JohnSnow",
+                        "password": "TheWall",
+                        "email": "stark@north.io"
+                    ]  
+                 }
+
+>     * 400 - bad request 
+
+>      * Responce:	
+            {
+               "key": 1,
+               "message": "count > countUser"
+            }   
+            
+>     * 500 - ошибка сервер
+
+>      * Responce:	
+            {
+               "key": 4,
+               "message": "Iternal server error"
+            } 
+            
+
 
 
 travis
+
 [![Build Status](https://travis-ci.org/magomedgadjiev/dno-team-02-2017.svg?branch=master)](https://travis-ci.org/magomedgadjiev/dno-team-02-2017)

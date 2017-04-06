@@ -7,18 +7,18 @@ import java.util.List;
 public class RespWithUsers {
     private int key;
     
-    private List<UserProfile> userProfile;
+    private List<UserProfile> userProfiles;
 
-    public List<UserProfile> getUserProfile() {
-        return userProfile;
+    public List<UserProfile> getUserProfiles() {
+        return userProfiles;
     }
 
     public void addUser(UserProfile u) {
-        this.userProfile.add(u);
+        this.userProfiles.add(u);
     }
 
-    public void setUserProfile(List<UserProfile> userProfile) {
-        this.userProfile = userProfile;
+    public void setUserProfiles(List<UserProfile> userProfiles) {
+        this.userProfiles = userProfiles;
     }
 
     public int getKey() {

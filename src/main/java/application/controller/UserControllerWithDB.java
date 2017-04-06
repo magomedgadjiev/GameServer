@@ -103,7 +103,7 @@ public class UserControllerWithDB {
             return new ResponseEntity<>(new Resp(1, "you don't login"), HttpStatus.BAD_REQUEST);
         } catch (DuplicateKeyException e) {
             LOGGER.debug("This user alredy exist");
-            return new ResponseEntity<>(new Resp(3, "This user alredy exist"), HttpStatus.CONFLICT);
+            return new ResponseEntity<>(new Resp(3, "This user already exist"), HttpStatus.CONFLICT);
         } catch (RuntimeException ignored) {
             LOGGER.debug("Iternal server error");
             return new ResponseEntity<>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
