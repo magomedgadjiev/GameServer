@@ -39,6 +39,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
+    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> signIn(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
             if (userProfile.isEmpty()) {
@@ -63,6 +64,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user/getInfoUser", method = RequestMethod.GET)
+    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> getInfoUser(HttpSession session) throws IOException {
         try {
             if (session.getAttribute(LOGIN) != null) {
@@ -79,6 +81,7 @@ public class UserController {
 
 
     @RequestMapping(value = "/user/setInfoUser", method = RequestMethod.POST)
+    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> setInfoUser(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
             if (session.getAttribute(LOGIN) != null) {

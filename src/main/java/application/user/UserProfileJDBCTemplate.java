@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import javax.jws.soap.SOAPBinding;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,18 +24,6 @@ public class UserProfileJDBCTemplate {
     @Autowired
     public UserProfileJDBCTemplate(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    public void createTable() {
-        final String query = "CREATE EXTENSION IF NOT EXISTS citext; " +
-                "CREATE TABLE IF NOT EXISTS user_project ( " +
-                "nickname varchar(128) UNIQUE NOT NULL , " +
-                "password varchar(128) NOT NULL, " +
-                "email CITEXT UNIQUE NOT NULL PRIMARY KEY, " +
-                "rating INT NOT NULL DEFAULT 0);";
-        LOGGER.debug(query +
-                "create table success");
-        jdbcTemplate.execute(query);
     }
 
     public void dropTable() {
@@ -57,36 +46,27 @@ public class UserProfileJDBCTemplate {
         return users;
     }
 
-    public void update(String nickname, String password, String email, Integer rating){
-        final String SQL = "update user_project set nickname = ?, password = ?, rating = ? where LOWER(email) = LOWER(?)";
+    public void updateUserProfile(UserProfile userProfile){
+        if (userProfile.getLogin() != null){
+            final String SQL = "update user_project set nickname = ? where LOWER(email) = LOWER(?)";
+            jdbcTemplate.update(SQL, userProfile.getLogin(), userProfile.getEmail());
+        }
 
-        jdbcTemplate.update(SQL, nickname, password, rating, email);
-        System.out.println("Updated user" );
-    }
+        if (userProfile.getPassword() != null){
+            final String SQL = "update user_project set password = ? where LOWER(email) = LOWER(?)";
+            jdbcTemplate.update(SQL, userProfile.getPassword(), userProfile.getEmail());
+        }
 
-    public void updateNickname(String nickname, String email){
-        final String SQL = "update user_project set nickname = ? where LOWER(email) = LOWER(?)";
+        if (userProfile.getRating() != 0){
+            final String SQL = "update user_project set rating = ? where LOWER(email) = LOWER(?)";
+            jdbcTemplate.update(SQL, userProfile.getRating(), userProfile.getEmail());
+        }
 
-        jdbcTemplate.update(SQL, nickname, email);
-        System.out.println("Updated user" );
-    }
-
-    public void updatePassword(String password, String email){
-        final String SQL = "update user_project set password = ? where LOWER(email) = LOWER(?)";
-
-        jdbcTemplate.update(SQL, password, email);
-        System.out.println("Updated user" );
-    }
-
-    public void updateRating(String email, Integer rating){
-        final String SQL = "update user_project set rating = ? where LOWER(email) = LOWER(?)";
-
-        jdbcTemplate.update(SQL, rating, email);
         System.out.println("Updated user" );
     }
 
     public List<UserProfile> getUsers(){
-        final String SQL = "select * from user_project";
+        final String SQL = "select * from user_project ORDER BY rating DESC";
         List<UserProfile> users = jdbcTemplate.query(SQL, new UserProfileMapper());
         LOGGER.debug("getListUsers success");
         return users;

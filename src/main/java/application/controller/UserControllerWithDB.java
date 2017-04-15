@@ -86,13 +86,7 @@ public class UserControllerWithDB {
         try {
             if (session.getAttribute(LOGIN) != null) {
                 if (!userProfile.isEmpty()) {
-                    userProfileJDBCTemplate.update(userProfile.getLogin(), userProfile.getPassword(), userProfile.getEmail(), userProfile.getRating());
-                    if (userProfile.getLogin() != null){
-                        userProfileJDBCTemplate.updateNickname(userProfile.getLogin(), userProfile.getEmail());
-                    }
-                    if(userProfile.getPassword() != null){
-                        userProfileJDBCTemplate.updatePassword(userProfile.getPassword(), userProfile.getEmail());
-                    }
+                    userProfileJDBCTemplate.updateUserProfile(userProfile);
                     LOGGER.debug("User data succesfully updated");
                     return ResponseEntity.ok(new Resp(0, "User data succesfully updated"));
                 }
@@ -110,7 +104,9 @@ public class UserControllerWithDB {
         }
     }
 
+
     @RequestMapping(value = "/auth/regirstration", method = RequestMethod.POST)
+    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> signUp(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
             if (userProfile.isEmpty()) {
@@ -139,15 +135,6 @@ public class UserControllerWithDB {
             }
             final List<UserProfile> userProfiles = userProfileJDBCTemplate.getUsers();
             final RespWithUsers respWithUsers = new RespWithUsers();
-            userProfiles.sort((o1, o2) -> {
-                if (o2.getRating() == o1.getRating()) {
-                    return 0;
-                } else if (o2.getRating() > o1.getRating()) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            });
             for (int i = 0; i < count; ++i) {
                 respWithUsers.addUser(userProfiles.get(i));
             }
@@ -163,7 +150,5 @@ public class UserControllerWithDB {
     @Autowired
     public UserControllerWithDB(UserProfileJDBCTemplate userProfileJDBCTemplate) {
         this.userProfileJDBCTemplate = userProfileJDBCTemplate;
-        userProfileJDBCTemplate.dropTable();
-        userProfileJDBCTemplate.createTable();
     }
 }
