@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UserProfile {
-    private String login;
+    private String username;
     private String password;
     private String email;
 
@@ -13,8 +13,8 @@ public class UserProfile {
     private int rating = 0;
 
     @JsonCreator
-    public UserProfile(@JsonProperty("login") String login, @JsonProperty("password")String password, @JsonProperty("email")String email) {
-        this.login = login;
+    public UserProfile(@JsonProperty("username") String username, @JsonProperty("password")String password, @JsonProperty("email")String email) {
+        this.username = username;
         this.password = password;
         this.email = email;
     }
@@ -23,8 +23,8 @@ public class UserProfile {
         ;
     }
 
-    public String getLogin() {
-        return login;
+    public String getUsername() {
+        return username;
     }
 
     public void setPassword(String password) {
@@ -35,8 +35,8 @@ public class UserProfile {
         return password;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
 

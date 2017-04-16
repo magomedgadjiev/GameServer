@@ -10,7 +10,7 @@
 ## API
 #### Авторизация пользователя.
 #####POST
->* /api/DB/auth/login
+>* /api/DB/auth/username
 
 >* Request:{ "email": "stark@north.io", "password": "TheWall" }
 
@@ -20,7 +20,7 @@
                     "key": 0,
                     "userProfile": 
                     {
-                        "login": "JohnSnow",
+                        "username": "JohnSnow",
                         "password": "TheWall",
                         "email": "stark@north.io",
                     }   
@@ -62,7 +62,7 @@
                     "key": 0,
                     "userProfiles": 
                     {
-                        "login": "JohnSnow",
+                        "username": "JohnSnow",
                         "password": "TheWall",
                         "email": "stark@north.io",
                     }   
@@ -104,7 +104,7 @@
                     "key": 0,
                     "userProfile": 
                     {
-                        "login": "JohnSnow",
+                        "username": "JohnSnow",
                         "password": "TheWall",
                         "email": "stark@north.io"
                     }   
@@ -115,7 +115,7 @@
 >      * Responce:	
             {
                "key": 1,
-               "message": "You did't login"
+               "message": "You did't username"
             }   
             
 >     * 500 - ошибка сервер
@@ -132,7 +132,7 @@
 
 >* /api/DB//user/setInfoUser
 
->* Request:{"login":"login1", "password":"prevpass","newpassword":"passnew"},
+>* Request:{"username":"login1", "password":"prevpass","newpassword":"passnew"},
 	   
 >    * 200 - запрос успешно выполнен
 
@@ -147,7 +147,7 @@
 >     * Responce:	
             {
                "key": 1,
-               "message": "You did't login"
+               "message": "You did't username"
             }   
 
 >    * 400 - введены неправильные данные
@@ -202,7 +202,7 @@
                     "key": 0,
                     "userProfiles": 
                     [
-                        "login": "JohnSnow",
+                        "username": "JohnSnow",
                         "password": "TheWall",
                         "email": "stark@north.io"
                     ]  

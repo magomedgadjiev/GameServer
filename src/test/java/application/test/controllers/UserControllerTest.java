@@ -32,7 +32,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @AutoConfigureMockMvc(print = MockMvcPrint.NONE)
 public class UserControllerTest {
 
-    private UserProfile userProfile = new UserProfile("login", "password", "email");
+    private UserProfile userProfile = new UserProfile("username", "password", "email");
 
     @Autowired
     private MockMvc mockMvc;
@@ -51,7 +51,7 @@ public class UserControllerTest {
     public void testRegirstration() throws Exception {
         final Gson gson = new Gson();
         final UserProfile userProfile2 = new UserProfile();
-        userProfile2.setLogin("a");
+        userProfile2.setUsername("a");
         userProfile2.setPassword("a");
         mockMvc.perform(post("/api/DB/auth/regirstration")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -61,9 +61,12 @@ public class UserControllerTest {
 
     @Test
     public void testLogin() throws Exception {
+        final Gson gson = new Gson();
+        mockMvc.perform(post("/api/DB/auth/regirstration")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(userProfile)));
         session.setAttribute(UserControllerWithDB.EMAIL, userProfile.getEmail());
         session.setAttribute(UserControllerWithDB.LOGIN, true);
-        final Gson gson = new Gson();
         mockMvc.perform(post("/api/DB/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(userProfile))
@@ -72,6 +75,10 @@ public class UserControllerTest {
 
     @Test
     public void testGetInfoUser() throws Exception {
+        final Gson gson = new Gson();
+        mockMvc.perform(post("/api/DB/auth/regirstration")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(userProfile)));
         session.setAttribute(UserControllerWithDB.EMAIL, userProfile.getEmail());
         session.setAttribute(UserControllerWithDB.LOGIN, true);
 
@@ -85,16 +92,17 @@ public class UserControllerTest {
     public void testSignOut() throws Exception {
         mockMvc.perform(get("/api/DB/auth/signOut")
         ).andExpect(status().isOk());
-
     }
 
     @Test
     public void testSetInfoUser() throws Exception {
+        final Gson gson = new Gson();
+        mockMvc.perform(post("/api/DB/auth/regirstration")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(userProfile)));
         session.setAttribute(UserControllerWithDB.EMAIL, userProfile.getEmail());
         session.setAttribute(UserControllerWithDB.LOGIN, true);
         final UserProfile userProfile1 = new UserProfile("aa", "dd", "email");
-
-        final Gson gson = new Gson();
         mockMvc.perform(post("/api/DB/user/setInfoUser")
                 .session(session)
                 .contentType(MediaType.APPLICATION_JSON)

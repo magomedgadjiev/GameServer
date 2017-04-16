@@ -113,7 +113,7 @@ public class UserControllerWithDB {
                 LOGGER.debug("Not all required parameters provided");
                 return new ResponseEntity<>(new Resp(2, "Not all required parameters provided"), HttpStatus.BAD_REQUEST);
             }
-            userProfileJDBCTemplate.create(userProfile.getLogin(), userProfile.getPassword(), userProfile.getEmail());
+            userProfileJDBCTemplate.create(userProfile.getUsername(), userProfile.getPassword(), userProfile.getEmail());
             session.setAttribute(LOGIN, true);
             session.setAttribute(EMAIL, userProfile.getEmail());
             LOGGER.debug("Success registration" + session.getId());

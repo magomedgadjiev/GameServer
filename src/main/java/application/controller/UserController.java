@@ -86,7 +86,7 @@ public class UserController {
         try {
             if (session.getAttribute(LOGIN) != null) {
                 if (userProfile.isEmpty()) {
-                    accountService.getUser(session.getAttribute(EMAIL).toString()).setLogin(userProfile.getLogin());
+                    accountService.getUser(session.getAttribute(EMAIL).toString()).setUsername(userProfile.getUsername());
                     accountService.getUser(session.getAttribute(EMAIL).toString()).setPassword(userProfile.getPassword());
                     LOGGER.debug("User data succesfully updated");
                     return ResponseEntity.ok(new Resp(0, "User data succesfully updated"));

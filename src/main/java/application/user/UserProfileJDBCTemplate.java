@@ -6,9 +6,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import javax.jws.soap.SOAPBinding;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,17 +36,16 @@ public class UserProfileJDBCTemplate {
     }
 
     public UserProfile getUserProfile(String email) {
-        String SQL = "select * from user_pr" +
-                "oject where email = ?";
+        String SQL = "select * from user_project where LOWER(email) = LOWER(?)";
         UserProfile users = jdbcTemplate.queryForObject(SQL, new UserProfileMapper(), email);
         LOGGER.debug("getUserByEmail success");
         return users;
     }
 
     public void updateUserProfile(UserProfile userProfile){
-        if (userProfile.getLogin() != null){
+        if (userProfile.getUsername() != null){
             final String SQL = "update user_project set nickname = ? where LOWER(email) = LOWER(?)";
-            jdbcTemplate.update(SQL, userProfile.getLogin(), userProfile.getEmail());
+            jdbcTemplate.update(SQL, userProfile.getUsername(), userProfile.getEmail());
         }
 
         if (userProfile.getPassword() != null){
