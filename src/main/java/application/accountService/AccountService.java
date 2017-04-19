@@ -32,15 +32,7 @@ public class AccountService {
 
     public List<UserProfile> sort() {
         final List<UserProfile> userProfiles = (ArrayList<UserProfile>) profiles.values();
-        userProfiles.sort((o1, o2) -> {
-            if (o2.getRating() == o1.getRating()) {
-                return 0;
-            } else if (o2.getRating() > o1.getRating()) {
-                return 1;
-            } else {
-                return -1;
-            }
-        });
+        Collections.sort(userProfiles);
         return userProfiles;
     }
 }

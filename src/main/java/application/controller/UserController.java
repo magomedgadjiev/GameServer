@@ -3,6 +3,7 @@ package application.controller;
 import java.io.IOException;
 import java.util.List;
 
+import application.config.ResponseMessage;
 import application.models.RespWithUsers;
 import application.accountService.AccountService;
 import application.models.RespWithUser;
@@ -23,7 +24,6 @@ import javax.servlet.http.HttpSession;
 public class UserController {
     public static final String EMAIL = "userEmail";
     public static final String LOGIN = "logIn";
-    public static final String SUCCESS = "success";
 
     private static final Logger LOGGER = Logger.getLogger("maga");
 
@@ -34,8 +34,8 @@ public class UserController {
         if (session.getAttribute(LOGIN) != null) {
             session.invalidate();
         }
-        LOGGER.debug("Success signOut");
-        return ResponseEntity.ok(new Resp(0, SUCCESS));
+        LOGGER.debug(ResponseMessage.SUCCESS);
+        return ResponseEntity.ok(new Resp(0, ResponseMessage.SUCCESS));
     }
 
     @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
@@ -43,23 +43,23 @@ public class UserController {
     public ResponseEntity<?> signIn(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
             if (userProfile.isEmpty()) {
-                LOGGER.debug("Not all required parameters provided");
-                return new ResponseEntity<>(new Resp(2, "Not all required parameters provided"), HttpStatus.BAD_REQUEST);
+                LOGGER.debug(ResponseMessage.BAD_REQUEST);
+                return new ResponseEntity<>(new Resp(2, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
             }
             if (accountService.isSignUp(userProfile.getEmail(), userProfile.getPassword())) {
                 if (session.getAttribute(LOGIN) == null) {
                     session.setAttribute(LOGIN, true);
                     session.setAttribute(EMAIL, userProfile.getEmail());
                 }
-                LOGGER.debug("Success login");
+                LOGGER.debug(ResponseMessage.SUCCESS);
                 return ResponseEntity.ok(new RespWithUser(0, accountService.getUser(userProfile.getEmail())));
             }
-            LOGGER.debug("did't registration");
-            return new ResponseEntity<>(new Resp(1, "You did't registration"), HttpStatus.BAD_REQUEST);
+            LOGGER.debug(ResponseMessage.REGISTRATION);
+            return new ResponseEntity<>(new Resp(1, ResponseMessage.REGISTRATION), HttpStatus.BAD_REQUEST);
 
         } catch (RuntimeException ignored) {
-            LOGGER.debug("Internal server error");
-            return new ResponseEntity<>(new Resp(4, "Internal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            LOGGER.debug(ResponseMessage.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new Resp(4, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -68,14 +68,14 @@ public class UserController {
     public ResponseEntity<?> getInfoUser(HttpSession session) throws IOException {
         try {
             if (session.getAttribute(LOGIN) != null) {
-                LOGGER.debug("Success get info user");
+                LOGGER.debug(ResponseMessage.SUCCESS);
                 return ResponseEntity.ok(new RespWithUser(0, (accountService.getUser((String) (session.getAttribute(EMAIL))))));
             }
-            LOGGER.debug("don't login");
-            return new ResponseEntity<>(new Resp(1, "You don't login"), HttpStatus.BAD_REQUEST);
+            LOGGER.debug(ResponseMessage.LOGIN);
+            return new ResponseEntity<>(new Resp(1, ResponseMessage.LOGIN), HttpStatus.BAD_REQUEST);
         } catch (RuntimeException ignored) {
-            LOGGER.debug("Internal server error");
-            return new ResponseEntity<>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            LOGGER.debug(ResponseMessage.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new Resp(4, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -88,17 +88,17 @@ public class UserController {
                 if (userProfile.isEmpty()) {
                     accountService.getUser(session.getAttribute(EMAIL).toString()).setUsername(userProfile.getUsername());
                     accountService.getUser(session.getAttribute(EMAIL).toString()).setPassword(userProfile.getPassword());
-                    LOGGER.debug("User data succesfully updated");
-                    return ResponseEntity.ok(new Resp(0, "User data succesfully updated"));
+                    LOGGER.debug(ResponseMessage.SUCCESS);
+                    return ResponseEntity.ok(new Resp(0, ResponseMessage.SUCCESS));
                 }
-                LOGGER.debug("Not all required parameters provided");
-                return new ResponseEntity<>(new Resp(2, "Not all required parameters provided"), HttpStatus.BAD_REQUEST);
+                LOGGER.debug(ResponseMessage.BAD_REQUEST);
+                return new ResponseEntity<>(new Resp(2, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
             }
-            LOGGER.debug("don't login");
-            return new ResponseEntity<>(new Resp(1, "you don't login"), HttpStatus.BAD_REQUEST);
+            LOGGER.debug(ResponseMessage.LOGIN);
+            return new ResponseEntity<>(new Resp(1, ResponseMessage.LOGIN), HttpStatus.BAD_REQUEST);
         } catch (RuntimeException ignored) {
-            LOGGER.debug("Iternal server error");
-            return new ResponseEntity<>(new Resp(4, "Iternal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            LOGGER.debug(ResponseMessage.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new Resp(4, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -106,21 +106,21 @@ public class UserController {
     public ResponseEntity<?> signUp(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
             if (userProfile.isEmpty()) {
-                LOGGER.debug("Not all required parameters provided");
-                return new ResponseEntity<>(new Resp(2, "Not all required parameters provided"), HttpStatus.BAD_REQUEST);
+                LOGGER.debug(ResponseMessage.BAD_REQUEST);
+                return new ResponseEntity<>(new Resp(2, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
             }
             if (accountService.isSignUp(userProfile.getEmail(), userProfile.getPassword())) {
-                LOGGER.debug("This application.user alredy exist");
-                return new ResponseEntity<>(new Resp(3, "This application.user alredy exist"), HttpStatus.CONFLICT);
+                LOGGER.debug(ResponseMessage.CONFLICT);
+                return new ResponseEntity<>(new Resp(3, ResponseMessage.CONFLICT), HttpStatus.CONFLICT);
             }
             session.setAttribute(LOGIN, true);
             session.setAttribute(EMAIL, userProfile.getEmail());
             accountService.addUser(userProfile);
-            LOGGER.debug("Success registration" + session.getId());
+            LOGGER.debug(ResponseMessage.SUCCESS + session.getId());
             return new ResponseEntity<>(new RespWithUser(0, userProfile), HttpStatus.CREATED);
         } catch (RuntimeException ignored) {
-            LOGGER.debug("Internal server error");
-            return new ResponseEntity<>(new Resp(4, "Internal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            LOGGER.debug(ResponseMessage.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new Resp(4, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -136,12 +136,12 @@ public class UserController {
                 respWithUsers.addUser(userProfiles.get(i));
             }
             respWithUsers.setKey(0);
-            LOGGER.debug("Success get users");
+            LOGGER.debug(ResponseMessage.SUCCESS);
             return ResponseEntity.ok(respWithUsers);
 
         } catch (RuntimeException ignored) {
-            LOGGER.debug("Internal server error");
-            return new ResponseEntity<>(new Resp(4, "Internal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            LOGGER.debug(ResponseMessage.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new Resp(4, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
