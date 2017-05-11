@@ -34,20 +34,20 @@ public class UserProfileJDBCTemplate {
     }
 
     public void dropTable() {
-        String query = "DROP TABLE IF EXISTS user_project";
-        jdbcTemplate.execute(query);
+        final String sql = "DROP TABLE IF EXISTS user_project";
+        jdbcTemplate.execute(sql);
         LOGGER.debug("drop success");
     }
 
     public void create(String nickname, String password, String email) {
-        String SQL = "insert into user_project(nickname, password, email, rating) values (?, ?, ?, ?)";
-        jdbcTemplate.update(SQL, nickname, password, email, 0);
+        final String sql = "insert into user_project(nickname, password, email, rating) values (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, nickname, password, email, 0);
         LOGGER.debug("insert success");
     }
 
     public UserProfile getUserProfile(String email) {
-        String SQL = "select * from user_project where LOWER(email) = LOWER(?)";
-        UserProfile users = jdbcTemplate.queryForObject(SQL, new UserProfileMapper(), email);
+        final String sql = "select * from user_project where LOWER(email) = LOWER(?)";
+        final UserProfile users = jdbcTemplate.queryForObject(sql, new UserProfileMapper(), email);
         LOGGER.debug("getUserByEmail success");
         return users;
     }
@@ -59,35 +59,29 @@ public class UserProfileJDBCTemplate {
         }
 
         if (userProfile.getPassword() != null){
-            final String SQL = "update user_project set password = ? where LOWER(email) = LOWER(?)";
-            jdbcTemplate.update(SQL, userProfile.getPassword(), userProfile.getEmail());
+            final String sql = "update user_project set password = ? where LOWER(email) = LOWER(?)";
+            jdbcTemplate.update(sql, userProfile.getPassword(), userProfile.getEmail());
         }
 
         if (userProfile.getRating() != 0){
-            final String SQL = "update user_project set rating = ? where LOWER(email) = LOWER(?)";
-            jdbcTemplate.update(SQL, userProfile.getRating(), userProfile.getEmail());
+            final String sql = "update user_project set rating = ? where LOWER(email) = LOWER(?)";
+            jdbcTemplate.update(sql, userProfile.getRating(), userProfile.getEmail());
         }
 
         LOGGER.debug("Updated user success" );
     }
 
     public List<UserProfile> getUsers(){
-        final String SQL = "select * from user_project ORDER BY rating DESC";
-        List<UserProfile> users = jdbcTemplate.query(SQL, new UserProfileMapper());
+        final String sql = "select * from user_project ORDER BY rating DESC";
+        final List<UserProfile> users = jdbcTemplate.query(sql, new UserProfileMapper());
         LOGGER.debug("getListUsers success");
         return users;
     }
 
     public int getCount() {
-        final String SQL = "select COUNT(*) from user_project";
-        final int count = jdbcTemplate.queryForObject(SQL, Integer.class);
+        final String sql = "select COUNT(*) from user_project";
+        final int count = jdbcTemplate.queryForObject(sql, Integer.class);
         LOGGER.debug("getCount success");
         return count;
-    }
-
-    public void delete() {
-        final String SQL = "delete from user_project";
-        jdbcTemplate.update(SQL);
-        System.out.println("Deleted success" );
     }
 }
