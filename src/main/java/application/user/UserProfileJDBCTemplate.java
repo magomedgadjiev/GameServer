@@ -3,7 +3,6 @@ package application.user;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.List;
  * Created by magomed on 27.03.17.
  */
 @Service
-@Component
 public class UserProfileJDBCTemplate {
 
     private final JdbcTemplate jdbcTemplate;
@@ -21,6 +19,18 @@ public class UserProfileJDBCTemplate {
     @Autowired
     public UserProfileJDBCTemplate(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public void createTable() {
+        final String query = "CREATE EXTENSION IF NOT EXISTS citext; " +
+                "CREATE TABLE IF NOT EXISTS user_project ( " +
+                "nickname varchar(128) UNIQUE NOT NULL , " +
+                "password varchar(128) NOT NULL, " +
+                "email CITEXT UNIQUE NOT NULL PRIMARY KEY, " +
+                "rating INT NOT NULL DEFAULT 0);";
+        LOGGER.debug(query +
+                "create table success");
+        jdbcTemplate.execute(query);
     }
 
     public void dropTable() {
@@ -44,8 +54,8 @@ public class UserProfileJDBCTemplate {
 
     public void updateUserProfile(UserProfile userProfile){
         if (userProfile.getUsername() != null){
-            final String SQL = "update user_project set nickname = ? where LOWER(email) = LOWER(?)";
-            jdbcTemplate.update(SQL, userProfile.getUsername(), userProfile.getEmail());
+            final String sql = "update user_project set nickname = ? where LOWER(email) = LOWER(?)";
+            jdbcTemplate.update(sql, userProfile.getUsername(), userProfile.getEmail());
         }
 
         if (userProfile.getPassword() != null){
@@ -58,7 +68,7 @@ public class UserProfileJDBCTemplate {
             jdbcTemplate.update(SQL, userProfile.getRating(), userProfile.getEmail());
         }
 
-        System.out.println("Updated user" );
+        LOGGER.debug("Updated user success" );
     }
 
     public List<UserProfile> getUsers(){

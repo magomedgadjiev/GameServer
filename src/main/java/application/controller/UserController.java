@@ -29,6 +29,7 @@ public class UserController {
 
     private final AccountService accountService;
 
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/auth/signOut", method = RequestMethod.GET)
     public ResponseEntity<?> signOut(HttpSession session) throws IOException {
         if (session.getAttribute(LOGIN) != null) {
@@ -38,8 +39,8 @@ public class UserController {
         return ResponseEntity.ok(new Resp(0, ResponseMessage.SUCCESS));
     }
 
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
-    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> signIn(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
             if (userProfile.isEmpty()) {
@@ -63,8 +64,8 @@ public class UserController {
         }
     }
 
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/user/getInfoUser", method = RequestMethod.GET)
-    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> getInfoUser(HttpSession session) throws IOException {
         try {
             if (session.getAttribute(LOGIN) != null) {
@@ -80,8 +81,8 @@ public class UserController {
     }
 
 
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/user/setInfoUser", method = RequestMethod.POST)
-    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> setInfoUser(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
             if (session.getAttribute(LOGIN) != null) {
@@ -102,6 +103,7 @@ public class UserController {
         }
     }
 
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/auth/regirstration", method = RequestMethod.POST)
     public ResponseEntity<?> signUp(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
@@ -124,6 +126,7 @@ public class UserController {
         }
     }
 
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/stats/{count}", method = RequestMethod.GET)
     public ResponseEntity<?> getMMR(@PathVariable(value = "count") int count) throws IOException {
         try {

@@ -1,6 +1,7 @@
 package application.test.service;
 
 import application.accountService.AccountService;
+import application.user.UserProfile;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -22,5 +23,23 @@ public class AccountServiceTest {
     public void ensureExists(){
         assertNotNull(usersService);
     }
+
+    @Test
+    public void getUser(){
+        final UserProfile userProfile = new UserProfile("a", "a", "a");
+        usersService.addUser(userProfile);
+        assert usersService.isSignUp("a", "a");
+    }
+
+    @Test
+    public void getUserNotFound(){
+        final UserProfile userProfile = new UserProfile("a", "a", "a");
+        usersService.addUser(userProfile);
+        assert !usersService.isSignUp("aaa", "aaaa");
+    }
+
+
+
+
 
 }

@@ -33,6 +33,7 @@ public class UserControllerWithDB {
 
     private UserProfileJDBCTemplate userProfileJDBCTemplate;
 
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/auth/signOut", method = RequestMethod.GET)
     public ResponseEntity<?> signOut(HttpSession session) throws IOException {
         if (session.getAttribute(LOGIN) != null) {
@@ -42,6 +43,7 @@ public class UserControllerWithDB {
         return ResponseEntity.ok(new Resp(0, ResponseMessage.SUCCESS));
     }
 
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
     public ResponseEntity<?> signIn(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
@@ -65,6 +67,7 @@ public class UserControllerWithDB {
         }
     }
 
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/user/getInfoUser", method = RequestMethod.GET)
     public ResponseEntity<?> getInfoUser(HttpSession session) throws IOException {
         try {
@@ -80,7 +83,7 @@ public class UserControllerWithDB {
         }
     }
 
-
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/user/setInfoUser", method = RequestMethod.POST)
     public ResponseEntity<?> setInfoUser(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
@@ -104,9 +107,8 @@ public class UserControllerWithDB {
         }
     }
 
-
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/auth/regirstration", method = RequestMethod.POST)
-    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> signUp(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
             if (userProfile.isEmpty()) {
@@ -127,6 +129,7 @@ public class UserControllerWithDB {
         }
     }
 
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/stats/{count}", method = RequestMethod.GET)
     public ResponseEntity<?> getMMR(@PathVariable(value = "count") int count) throws IOException {
         try {
@@ -150,5 +153,7 @@ public class UserControllerWithDB {
     @Autowired
     public UserControllerWithDB(UserProfileJDBCTemplate userProfileJDBCTemplate) {
         this.userProfileJDBCTemplate = userProfileJDBCTemplate;
+        userProfileJDBCTemplate.dropTable();
+        userProfileJDBCTemplate.createTable();
     }
 }
