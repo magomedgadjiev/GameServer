@@ -63,16 +63,11 @@ public class UserProfileJDBCTemplate {
             jdbcTemplate.update(sql, userProfile.getPassword(), userProfile.getEmail());
         }
 
-        if (userProfile.getRating() != 0){
-            final String sql = "update user_project set rating = ? where LOWER(email) = LOWER(?)";
-            jdbcTemplate.update(sql, userProfile.getRating(), userProfile.getEmail());
-        }
-
         LOGGER.debug("Updated user success" );
     }
 
     public List<UserProfile> getUsers(){
-        final String sql = "select * from user_project ORDER BY rating DESC";
+        final String sql = "select * from user_project ORDER BY ";
         final List<UserProfile> users = jdbcTemplate.query(sql, new UserProfileMapper());
         LOGGER.debug("getListUsers success");
         return users;

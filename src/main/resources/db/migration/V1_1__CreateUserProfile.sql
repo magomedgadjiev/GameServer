@@ -3,5 +3,7 @@ CREATE TABLE IF NOT EXISTS user_project (
   nickname VARCHAR(128) UNIQUE NOT NULL,
   password VARCHAR(128)        NOT NULL,
   email    CITEXT UNIQUE       NOT NULL PRIMARY KEY,
-  rating   INT                 NOT NULL DEFAULT 0
+  wins     INT DEFAULT 0,
+  losses    INT DEFAULT 0,
+  draws   INT DEFAULT 0
 );

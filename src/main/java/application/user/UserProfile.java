@@ -3,6 +3,7 @@ package application.user;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.jetbrains.annotations.NotNull;
 
 public class UserProfile implements Comparable<UserProfile> {
     private String username;
@@ -10,7 +11,11 @@ public class UserProfile implements Comparable<UserProfile> {
     private String email;
 
     @JsonIgnore
-    private int rating = 0;
+    private int wins;
+    @JsonIgnore
+    private int losses;
+    @JsonIgnore
+    private int draws;
 
     @JsonCreator
     public UserProfile(@JsonProperty("username") String username, @JsonProperty("password")String password, @JsonProperty("email")String email) {
@@ -20,7 +25,7 @@ public class UserProfile implements Comparable<UserProfile> {
     }
 
     public UserProfile() {
-        ;
+
     }
 
     public String getUsername() {
@@ -52,22 +57,30 @@ public class UserProfile implements Comparable<UserProfile> {
         this.email = email;
     }
 
-    public int getRating() {
-        return rating;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
-
     @Override
-    public int compareTo(UserProfile o) {
-        if (rating == o.rating) {
+    public int compareTo(@NotNull UserProfile o) {
+        if (wins - losses == o.wins - o.losses) {
             return 0;
-        } else if (rating > o.rating) {
+        } else if (wins - losses > o.wins - o.losses) {
             return 1;
         } else {
             return -1;
         }
+    }
+
+    public void setWins(int wins) {
+        this.wins = wins;
+    }
+
+    public void setLosses(int losses) {
+        this.losses = losses;
+    }
+
+    public int getDraws() {
+        return draws;
+    }
+
+    public void setDraws(int draws) {
+        this.draws = draws;
     }
 }

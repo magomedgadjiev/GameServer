@@ -1,6 +1,6 @@
 package application.test.service;
 
-import application.accountService.AccountService;
+import application.accountservice.AccountService;
 import application.user.UserProfile;
 import org.junit.Before;
 import org.junit.Test;

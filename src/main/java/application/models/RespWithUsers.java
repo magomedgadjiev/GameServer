@@ -12,8 +12,8 @@ public class RespWithUsers {
         return userProfile;
     }
 
-    public void addUser(UserProfile userProfile) {
-        this.userProfile.add(userProfile);
+    public void addUser(UserProfile userProf) {
+        this.userProfile.add(userProf);
     }
 
     public void setUserProfile(List<UserProfile> userProfile) {
