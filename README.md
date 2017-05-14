@@ -18,7 +18,7 @@
 
 >      * Response: {
                     "key": 0,
-                    "userProfile": 
+                    "userProfiles": 
                     {
                         "username": "JohnSnow",
                         "password": "TheWall",
@@ -102,7 +102,7 @@
             
 >      * Response: {
                     "key": 0,
-                    "userProfile": 
+                    "userProfiles": 
                     {
                         "username": "JohnSnow",
                         "password": "TheWall",

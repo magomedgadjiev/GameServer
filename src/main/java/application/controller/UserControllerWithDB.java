@@ -138,9 +138,7 @@ public class UserControllerWithDB {
             }
             final List<UserProfile> userProfiles = userProfileJDBCTemplate.getUsers();
             final RespWithUsers respWithUsers = new RespWithUsers();
-            for (int i = 0; i < count; ++i) {
-                respWithUsers.addUser(userProfiles.get(i));
-            }
+            respWithUsers.getUserProfiles().addAll(userProfiles);
             respWithUsers.setKey(0);
             LOGGER.debug(ResponseMessage.SUCCESS);
             return ResponseEntity.ok(respWithUsers);
@@ -153,7 +151,7 @@ public class UserControllerWithDB {
     @Autowired
     public UserControllerWithDB(UserProfileJDBCTemplate userProfileJDBCTemplate) {
         this.userProfileJDBCTemplate = userProfileJDBCTemplate;
-        userProfileJDBCTemplate.dropTable();
-        userProfileJDBCTemplate.createTable();
+//        userProfileJDBCTemplate.dropTable();
+//        userProfileJDBCTemplate.createTable();
     }
 }
