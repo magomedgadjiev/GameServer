@@ -148,5 +148,7 @@ public class UserControllerWithDB {
     @Autowired
     public UserControllerWithDB(UserProfileJDBCTemplate userProfileJDBCTemplate) {
         this.userProfileJDBCTemplate = userProfileJDBCTemplate;
+        userProfileJDBCTemplate.dropTable();
+        userProfileJDBCTemplate.createTable();
     }
 }

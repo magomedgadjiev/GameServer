@@ -74,10 +74,10 @@ public class UserProfileJDBCTemplate {
         return users;
     }
 
-    public int getCount() {
-        final String sql = "SELECT COUNT(*) FROM user_project";
-        final int count = jdbcTemplate.queryForObject(sql, Integer.class);
-        LOGGER.info("getCount success");
-        return count;
-    }
+//    public int getCount() {
+//        final String sql = "SELECT COUNT(*) FROM user_project";
+//        final int count = jdbcTemplate.queryForObject(sql, Integer.class);
+//        LOGGER.info("getCount success");
+//        return count;
+//    }
 }
