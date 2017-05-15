@@ -1,40 +1,28 @@
 package application.websocket;
 
-import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+import org.apache.log4j.Logger;
 
 import javax.naming.AuthenticationException;
 
 /**
  * Created by magomed on 19.04.17.
  */
-@Component
-public class GameSocketHandler extends TextWebSocketHandler{
-    private static final Logger LOGGER = LoggerFactory.getLogger(GameSocketHandler.class);
-    private final RemotePointService remotePointService;
+public class MyWebSocketHandler extends TextWebSocketHandler{
+    private static final Logger LOGGER = Logger.getLogger(MyWebSocketHandler.class);
 
-    @Autowired
-    public GameSocketHandler(@NotNull RemotePointService remotePointService) {
-        this.remotePointService = remotePointService;
-    }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession webSocketSession) throws AuthenticationException {
-//        remotePointService.registerUser(webSocketSession.getId(), webSocketSession);
-
-        LOGGER.debug("connection open");
+        LOGGER.info("connection open");
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws AuthenticationException {
-        LOGGER.debug("");
+        LOGGER.info("");
     }
 
     @Override
@@ -44,7 +32,7 @@ public class GameSocketHandler extends TextWebSocketHandler{
 
     @Override
     public void afterConnectionClosed(WebSocketSession webSocketSession, CloseStatus closeStatus) throws Exception {
-       LOGGER.debug("connection close");
+        LOGGER.info("connection close");
 //       remotePointService.removeUser(webSocketSession.getId());
     }
 

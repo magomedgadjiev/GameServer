@@ -30,7 +30,7 @@ public class UserProfileJDBCTemplate {
                 "wins     INT DEFAULT 0," +
                 "losses    INT DEFAULT 0," +
                 "draws   INT DEFAULT 0);";
-        LOGGER.debug(query +
+        LOGGER.info(query +
                 "create table success");
         jdbcTemplate.execute(query);
     }
@@ -38,19 +38,19 @@ public class UserProfileJDBCTemplate {
     public void dropTable() {
         final String sql = "DROP TABLE IF EXISTS user_project";
         jdbcTemplate.execute(sql);
-        LOGGER.debug("drop success");
+        LOGGER.info("drop success");
     }
 
     public void create(String nickname, String password, String email) {
         final String sql = "INSERT INTO user_project(nickname, password, email) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, nickname, password, email);
-        LOGGER.debug("insert success");
+        LOGGER.info("insert success");
     }
 
     public UserProfile getUserProfile(String email) {
         final String sql = "SELECT * FROM user_project WHERE LOWER(email) = LOWER(?)";
         final UserProfile users = jdbcTemplate.queryForObject(sql, new UserProfileMapper(), email);
-        LOGGER.debug("getUserByEmail success");
+        LOGGER.info("getUserByEmail success");
         return users;
     }
 
@@ -64,21 +64,20 @@ public class UserProfileJDBCTemplate {
             final String sql = "UPDATE user_project SET password = ? WHERE LOWER(email) = LOWER(?)";
             jdbcTemplate.update(sql, userProfile.getPassword(), userProfile.getEmail());
         }
-
-        LOGGER.debug("Updated user success");
+        LOGGER.info("Updated user success");
     }
 
-    public List<UserProfile> getUsers() {
-        final String sql = "SELECT * FROM user_project ORDER BY wins ";
-        final List<UserProfile> users = jdbcTemplate.query(sql, new UserProfileMapper());
-        LOGGER.debug("getListUsers success");
+    public List<UserProfile> getUsers(int count) {
+        final String sql = "SELECT * FROM user_project ORDER BY wins LIMIT ?";
+        final List<UserProfile> users = jdbcTemplate.query(sql, new UserProfileMapper(), count);
+        LOGGER.info("getListUsers success");
         return users;
     }
 
     public int getCount() {
         final String sql = "SELECT COUNT(*) FROM user_project";
         final int count = jdbcTemplate.queryForObject(sql, Integer.class);
-        LOGGER.debug("getCount success");
+        LOGGER.info("getCount success");
         return count;
     }
 }

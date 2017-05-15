@@ -35,7 +35,7 @@ public class UserController {
         if (session.getAttribute(LOGIN) != null) {
             session.invalidate();
         }
-        LOGGER.debug(ResponseMessage.SUCCESS);
+        LOGGER.info(ResponseMessage.SUCCESS);
         return ResponseEntity.ok(new Resp(0, ResponseMessage.SUCCESS));
     }
 
@@ -44,7 +44,7 @@ public class UserController {
     public ResponseEntity<?> signIn(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
             if (userProfile.isEmpty()) {
-                LOGGER.debug(ResponseMessage.BAD_REQUEST);
+                LOGGER.warn(ResponseMessage.BAD_REQUEST);
                 return new ResponseEntity<>(new Resp(2, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
             }
             if (accountService.isSignUp(userProfile.getEmail(), userProfile.getPassword())) {
@@ -52,14 +52,14 @@ public class UserController {
                     session.setAttribute(LOGIN, true);
                     session.setAttribute(EMAIL, userProfile.getEmail());
                 }
-                LOGGER.debug(ResponseMessage.SUCCESS);
+                LOGGER.info(ResponseMessage.SUCCESS);
                 return ResponseEntity.ok(new RespWithUser(0, accountService.getUser(userProfile.getEmail())));
             }
-            LOGGER.debug(ResponseMessage.REGISTRATION);
+            LOGGER.warn(ResponseMessage.REGISTRATION);
             return new ResponseEntity<>(new Resp(1, ResponseMessage.REGISTRATION), HttpStatus.BAD_REQUEST);
 
         } catch (RuntimeException ignored) {
-            LOGGER.debug(ResponseMessage.INTERNAL_SERVER_ERROR);
+            LOGGER.error(ignored.getMessage());
             return new ResponseEntity<>(new Resp(4, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -69,13 +69,13 @@ public class UserController {
     public ResponseEntity<?> getInfoUser(HttpSession session) throws IOException {
         try {
             if (session.getAttribute(LOGIN) != null) {
-                LOGGER.debug(ResponseMessage.SUCCESS);
+                LOGGER.info(ResponseMessage.SUCCESS);
                 return ResponseEntity.ok(new RespWithUser(0, (accountService.getUser((String) (session.getAttribute(EMAIL))))));
             }
-            LOGGER.debug(ResponseMessage.LOGIN);
+            LOGGER.warn(ResponseMessage.LOGIN);
             return new ResponseEntity<>(new Resp(1, ResponseMessage.LOGIN), HttpStatus.BAD_REQUEST);
         } catch (RuntimeException ignored) {
-            LOGGER.debug(ResponseMessage.INTERNAL_SERVER_ERROR);
+            LOGGER.error(ignored.getMessage());
             return new ResponseEntity<>(new Resp(4, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -89,16 +89,16 @@ public class UserController {
                 if (userProfile.isEmpty()) {
                     accountService.getUser(session.getAttribute(EMAIL).toString()).setUsername(userProfile.getUsername());
                     accountService.getUser(session.getAttribute(EMAIL).toString()).setPassword(userProfile.getPassword());
-                    LOGGER.debug(ResponseMessage.SUCCESS);
+                    LOGGER.info(ResponseMessage.SUCCESS);
                     return ResponseEntity.ok(new Resp(0, ResponseMessage.SUCCESS));
                 }
-                LOGGER.debug(ResponseMessage.BAD_REQUEST);
+                LOGGER.warn(ResponseMessage.BAD_REQUEST);
                 return new ResponseEntity<>(new Resp(2, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
             }
-            LOGGER.debug(ResponseMessage.LOGIN);
+            LOGGER.warn(ResponseMessage.LOGIN);
             return new ResponseEntity<>(new Resp(1, ResponseMessage.LOGIN), HttpStatus.BAD_REQUEST);
         } catch (RuntimeException ignored) {
-            LOGGER.debug(ResponseMessage.INTERNAL_SERVER_ERROR);
+            LOGGER.error(ignored.getMessage());
             return new ResponseEntity<>(new Resp(4, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -108,20 +108,20 @@ public class UserController {
     public ResponseEntity<?> signUp(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
             if (userProfile.isEmpty()) {
-                LOGGER.debug(ResponseMessage.BAD_REQUEST);
+                LOGGER.warn(ResponseMessage.BAD_REQUEST);
                 return new ResponseEntity<>(new Resp(2, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
             }
             if (accountService.isSignUp(userProfile.getEmail(), userProfile.getPassword())) {
-                LOGGER.debug(ResponseMessage.CONFLICT);
+                LOGGER.warn(ResponseMessage.CONFLICT);
                 return new ResponseEntity<>(new Resp(3, ResponseMessage.CONFLICT), HttpStatus.CONFLICT);
             }
             session.setAttribute(LOGIN, true);
             session.setAttribute(EMAIL, userProfile.getEmail());
             accountService.addUser(userProfile);
-            LOGGER.debug(ResponseMessage.SUCCESS + session.getId());
+            LOGGER.info(ResponseMessage.SUCCESS + session.getId());
             return new ResponseEntity<>(new RespWithUser(0, userProfile), HttpStatus.CREATED);
         } catch (RuntimeException ignored) {
-            LOGGER.debug(ResponseMessage.INTERNAL_SERVER_ERROR);
+            LOGGER.error(ignored.getMessage());
             return new ResponseEntity<>(new Resp(4, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -130,20 +130,17 @@ public class UserController {
     @RequestMapping(value = "/stats/{count}", method = RequestMethod.GET)
     public ResponseEntity<?> getMMR(@PathVariable(value = "count") int count) throws IOException {
         try {
-            if (count > accountService.getSize()) {
-                return new ResponseEntity<>(new Resp(1, "count > countUser"), HttpStatus.BAD_REQUEST);
-            }
             final List<UserProfile> userProfiles = accountService.sort();
             final RespWithUsers respWithUsers = new RespWithUsers();
             for (int i = 0; i < count; ++i) {
                 respWithUsers.addUser(userProfiles.get(i));
             }
             respWithUsers.setKey(0);
-            LOGGER.debug(ResponseMessage.SUCCESS);
+            LOGGER.info(ResponseMessage.SUCCESS);
             return ResponseEntity.ok(respWithUsers);
 
         } catch (RuntimeException ignored) {
-            LOGGER.debug(ResponseMessage.INTERNAL_SERVER_ERROR);
+            LOGGER.error(ignored.getMessage());
             return new ResponseEntity<>(new Resp(4, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
