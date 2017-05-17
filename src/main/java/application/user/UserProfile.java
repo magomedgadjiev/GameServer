@@ -6,8 +6,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jetbrains.annotations.NotNull;
 
 public class UserProfile implements Comparable<UserProfile> {
+    @JsonProperty
     private String username;
+    @JsonProperty
     private String password;
+    @JsonProperty
     private String email;
 
     @JsonIgnore
@@ -46,7 +49,7 @@ public class UserProfile implements Comparable<UserProfile> {
 
 
     public boolean isEmpty() {
-        return email == null;
+        return email == null || email.isEmpty();
     }
 
     public String getEmail() {

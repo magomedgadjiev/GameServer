@@ -131,7 +131,7 @@ public class UserControllerWithDB {
 
     @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/stats/{count}", method = RequestMethod.GET)
-    public ResponseEntity<?> getMMR(@PathVariable(value = "count") int count) throws IOException {
+    public ResponseEntity<?> getMMR(@PathVariable(value = "count", required = false) int count) throws IOException {
         try {
             final List<UserProfile> userProfiles = userProfileJDBCTemplate.getUsers(count);
             final RespWithUsers respWithUsers = new RespWithUsers();

@@ -1,5 +1,8 @@
 package application.websocket;
 
+import application.mehanica.GameSessions;
+import application.mehanica.MehanicsExecutor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -11,13 +14,21 @@ import javax.naming.AuthenticationException;
 /**
  * Created by magomed on 19.04.17.
  */
-public class MyWebSocketHandler extends TextWebSocketHandler{
+public class MyWebSocketHandler extends TextWebSocketHandler {
     private static final Logger LOGGER = Logger.getLogger(MyWebSocketHandler.class);
+    private RemotePointService remotePointService;
+    private MehanicsExecutor mehanicsExecutor;
 
+    @Autowired
+    public MyWebSocketHandler(RemotePointService remotePointService, MehanicsExecutor mehanicsExecutor) {
+        this.remotePointService = remotePointService;
+        this.mehanicsExecutor = mehanicsExecutor;
+    }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession webSocketSession) throws AuthenticationException {
         LOGGER.info("connection open");
+        remotePointService.registerUser(webSocketSession);
     }
 
     @Override
@@ -33,7 +44,7 @@ public class MyWebSocketHandler extends TextWebSocketHandler{
     @Override
     public void afterConnectionClosed(WebSocketSession webSocketSession, CloseStatus closeStatus) throws Exception {
         LOGGER.info("connection close");
-//       remotePointService.removeUser(webSocketSession.getId());
+        remotePointService.removeUser(webSocketSession.getId());
     }
 
     @Override
