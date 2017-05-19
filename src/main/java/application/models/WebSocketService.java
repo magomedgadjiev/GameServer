@@ -3,6 +3,7 @@ package application.models;
 import application.websocket.Message;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.WebSocketException;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,8 @@ public class WebSocketService {
 
     public void sendMessageToUser(@NotNull String key, String message) throws IOException {
         final WebSocketSession webSocketSession = sessions.get(key);
+        Gson gson = new Gson();
+
         if (webSocketSession == null) {
             throw new IOException("no game websocket for user " + key);
         }
@@ -51,7 +54,7 @@ public class WebSocketService {
             throw new IOException("session is closed or not exsists");
         }
         try {
-            webSocketSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(new Messager(message))));
+            webSocketSession.sendMessage(new TextMessage(gson.toJson(new Messager(message))));
         } catch (JsonProcessingException | WebSocketException e) {
             throw new IOException("Unnable to send message", e);
         }
