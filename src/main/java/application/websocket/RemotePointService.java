@@ -32,7 +32,7 @@ public class RemotePointService {
         LOGGER.info("addUser success");
     }
 
-    public void update(@NotNull WebSocketSession webSocketSession, @NotNull TextMessage textMessage) {
+    public void update(@NotNull WebSocketSession webSocketSession, @NotNull TextMessage textMessage) throws IOException {
         final Gson gson = new Gson();
         final GameSession gameSession = gson.fromJson(textMessage.getPayload(), GameSession.class);
         if (gameSession.isEnd()) {
@@ -55,7 +55,7 @@ public class RemotePointService {
         webSocketService.removeSocket(key);
     }
 
-    public boolean isRegister(String key) {
+    public boolean isRegistr(String key) {
         return webSocketService.getSocketByKey(key) == null;
     }
 

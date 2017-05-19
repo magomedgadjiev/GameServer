@@ -44,10 +44,14 @@ public class GameRoomsService {
         gameSessions.add(session);
     }
 
-    public void updateField(GameSession gameSessionUpdate) {
+    public void updateField(GameSession gameSessionUpdate) throws IOException {
+        Gson gson = new Gson();
         for (GameSession gameSession : gameSessions) {
             if (gameSession.equals(gameSessionUpdate)) {
                 gameSession.setField(gameSessionUpdate.getField());
+                webSocketService.sendMessageToUser(gameSession.getFirst(), gson.toJson(gameSession));
+                webSocketService.sendMessageToUser(gameSession.getSecond(), gson.toJson(gameSession));
+                return;
             }
         }
     }
@@ -59,9 +63,11 @@ public class GameRoomsService {
             LOGGER.info("create loginFirstsuccess");
         } else {
             gameSession.setLoginSecond(login);
+            gameSession.setField("@@@@@@@@@");
             addGameSession(gameSession);
             LOGGER.info("create loginFirst and create rooms success");
             webSocketService.sendMessageToUser(id, gson.toJson(gameSession));
+            webSocketService.sendMessageToUser(gameSession.getFirst(), gson.toJson(gameSession));
             gameSession = new GameSession();
         }
     }
