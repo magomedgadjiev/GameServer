@@ -4,6 +4,7 @@ import application.config.ResponseMessage;
 import application.models.Resp;
 import application.models.RespWithUser;
 import application.models.RespWithUsers;
+import application.models.Test;
 import application.user.UserProfile;
 import application.user.UserProfileJDBCTemplate;
 import org.apache.log4j.Logger;
@@ -143,6 +144,12 @@ public class UserControllerWithDB {
             LOGGER.error(ignored.getMessage());
             return new ResponseEntity<>(new Resp(4, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @CrossOrigin(origins = "*", maxAge = 3600)
+    @RequestMapping(value = "/test", method = RequestMethod.POST)
+    public ResponseEntity<?> test(@RequestBody Test test) throws IOException {
+        return ResponseEntity.ok(test);
     }
 
     @Autowired
