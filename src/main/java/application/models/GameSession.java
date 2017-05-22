@@ -2,7 +2,6 @@ package application.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JacksonStdImpl;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,6 +19,15 @@ public class GameSession {
     private String second;
     @JsonProperty
     private String field;
+
+    public GameSession(){
+    }
+
+    public GameSession(String loginFirst, String loginSecond, String field) {
+        this.loginFirst = loginFirst;
+        this.loginSecond = loginSecond;
+        this.field = field;
+    }
 
     public String getFirst() {
         return first;

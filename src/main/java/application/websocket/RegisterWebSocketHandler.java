@@ -18,25 +18,16 @@ import java.io.IOException;
 public class RegisterWebSocketHandler extends TextWebSocketHandler {
     private static final Logger LOGGER = Logger.getLogger(MyWebSocketHandler.class);
     private RemotePointService remotePointService;
-    private WebSocketService webSocketService;
 
     @Autowired
-    public RegisterWebSocketHandler(RemotePointService remotePointService1, WebSocketService webSocketService) {
+    public RegisterWebSocketHandler(RemotePointService remotePointService1) {
         this.remotePointService = remotePointService1;
-        this.webSocketService = webSocketService;
     }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession webSocketSession) throws AuthenticationException, IOException {
         try {
-            final String id = webSocketSession.getId();
-
-            final Gson gson = new Gson();
-            if (id == null) {
-                throw new AuthenticationException("bad");
-            }
-            remotePointService.registerUser(id, webSocketSession);
-//        webSocketService.sendMessageToUser(id, gson.toJson(new Message(id)));
+            remotePointService.registerUser(webSocketSession);
             LOGGER.info("connection open");
         } catch (RuntimeException e){
             LOGGER.error(e.getMessage());
@@ -45,11 +36,7 @@ public class RegisterWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession webSocketSession, TextMessage message) throws AuthenticationException, IOException {
-        final String id = webSocketSession.getId();
-        if (id == null ) {
-            throw new AuthenticationException("bad");
-        }
-        remotePointService.setLogin(id, webSocketSession, message);
+        remotePointService.update(webSocketSession, message);
         LOGGER.info("send message success");
     }
 

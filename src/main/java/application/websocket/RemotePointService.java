@@ -4,7 +4,6 @@ import application.mehanica.GameRoomsService;
 import application.models.GameSession;
 import application.models.WebSocketService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -12,6 +11,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 
 @Service
 public class RemotePointService {
@@ -26,37 +26,45 @@ public class RemotePointService {
         this.webSocketService = webSocketService;
     }
 
-    public void registerUser(String key, @NotNull WebSocketSession webSocketSession) throws IOException {
-        webSocketService.addWebSocket(key, webSocketSession);
+    public void registerUser(@NotNull WebSocketSession webSocketSession) throws IOException {
+        webSocketService.addWebSocket(webSocketSession.getId(), webSocketSession);
         gameRoomsService.addUser(webSocketSession.getId());
         LOGGER.info("addUser success");
     }
 
-    public void update(@NotNull WebSocketSession webSocketSession, @NotNull TextMessage textMessage) throws IOException {
-        final Gson gson = new Gson();
-        final GameSession gameSession = gson.fromJson(textMessage.getPayload(), GameSession.class);
+    public synchronized void update(@NotNull WebSocketSession webSocketSession, @NotNull TextMessage textMessage) throws IOException, com.fasterxml.jackson.core.JsonParseException, com.fasterxml.jackson.databind.JsonMappingException {
+        try {
+            String str = textMessage.getPayload();
+            final Message message = objectMapper.readValue(textMessage.getPayload(), Message.class);
+            if (message.getType() == 1) {
+                setLogin(message.getContent(), webSocketSession.getId());
+            } else {
+                updateRoomService(message.getContent());
+            }
+        } catch (RuntimeException e){
+            LOGGER.error(e.getMessage());
+        }
+
+        LOGGER.info("update success");
+    }
+
+    public void updateRoomService(@NotNull Object object) throws IOException {
+        final LinkedHashMap linkedHashMap = (LinkedHashMap) object;
+        final GameSession gameSession = new GameSession((String)linkedHashMap.get("loginFirst"), (String)linkedHashMap.get("loginSecond"), (String)linkedHashMap.get("field"));
         if (gameSession.isEnd()) {
             removeUser(gameSession.getFirst());
             gameRoomsService.removeUser(gameSession);
         } else {
             gameRoomsService.updateField(gameSession);
         }
-        LOGGER.info("update success");
     }
-
-    public synchronized void setLogin(String key, @NotNull WebSocketSession webSocketSession, @NotNull TextMessage textMessage) throws IOException, com.fasterxml.jackson.core.JsonParseException, com.fasterxml.jackson.databind.JsonMappingException {
-        final Gson gson = new Gson();
-        final Message message = gson.fromJson(textMessage.getPayload(), Message.class);
-        gameRoomsService.updateLogin(message.getContent(), webSocketSession.getId());
+    public void setLogin(@NotNull Object login, String id) throws IOException {
+        gameRoomsService.updateLogin((String) login, id);
         LOGGER.info("update success");
     }
 
     public void removeUser(String key) {
         webSocketService.removeSocket(key);
-    }
-
-    public boolean isRegistr(String key) {
-        return webSocketService.getSocketByKey(key) == null;
     }
 
 }

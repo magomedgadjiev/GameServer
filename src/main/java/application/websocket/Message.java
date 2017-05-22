@@ -1,25 +1,41 @@
 package application.websocket;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by Solovyev on 06/04/16.
  */
 @SuppressWarnings("NullableProblems")
-public class Message {
-//    private @NotNull String type;
-    private @NotNull String content;
+public class Message<T> {
+    private @NotNull int type;
 
+    private @NotNull T content;
 
-    public @NotNull String getContent() {
+    @JsonCreator
+    public Message(@JsonProperty("content") T content, @JsonProperty("type") int type ) {
+        this.content = content;
+        this.type = type;
+    }
+
+    public @NotNull T getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(T content) {
         this.content = content;
     }
 
-    public Message(@NotNull String content) {
+    public Message(@NotNull T content) {
         this.content = content;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(@NotNull int type) {
+        this.type = type;
     }
 }

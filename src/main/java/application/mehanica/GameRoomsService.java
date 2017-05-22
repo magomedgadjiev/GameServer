@@ -1,9 +1,7 @@
 package application.mehanica;
 
 import application.models.GameSession;
-import application.models.Messager;
 import application.models.WebSocketService;
-import application.websocket.Message;
 import application.websocket.MyWebSocketHandler;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
