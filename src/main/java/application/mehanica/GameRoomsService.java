@@ -2,7 +2,6 @@ package application.mehanica;
 
 import application.models.GameSession;
 import application.models.WebSocketService;
-import application.websocket.MyWebSocketHandler;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +20,7 @@ public class GameRoomsService {
     private GameSession gameSession;
     private WebSocketService webSocketService;
     private List<GameSession> gameSessions = new ArrayList<>();
-    private static final Logger LOGGER = Logger.getLogger(MyWebSocketHandler.class);
+    private static final Logger LOGGER = Logger.getLogger(GameRoomsService.class);
 
 
     @Autowired

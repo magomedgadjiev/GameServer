@@ -9,10 +9,9 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import javax.naming.AuthenticationException;
 import java.io.IOException;
-import java.util.Map;
 
 /**
- * Created by magomed on 19.04.17.
+ * Created by magomed on 19.05.17.
  */
 public class MyWebSocketHandler extends TextWebSocketHandler {
     private static final Logger LOGGER = Logger.getLogger(MyWebSocketHandler.class);
@@ -25,7 +24,12 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession webSocketSession) throws AuthenticationException, IOException {
-        LOGGER.info("connection open");
+        try {
+            remotePointService.registerUser(webSocketSession);
+            LOGGER.info("connection open");
+        } catch (RuntimeException e){
+            LOGGER.error(e.getMessage());
+        }
     }
 
     @Override
@@ -41,6 +45,8 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession webSocketSession, CloseStatus closeStatus) throws Exception {
+        final String id = webSocketSession.getId();
+        remotePointService.removeUser(id);
         LOGGER.info("connection close");
     }
 

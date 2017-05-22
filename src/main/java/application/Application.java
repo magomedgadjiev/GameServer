@@ -1,7 +1,6 @@
 package application;
 
 import application.websocket.MyWebSocketHandler;
-import application.websocket.RegisterWebSocketHandler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -18,10 +17,5 @@ public class Application {
     @Bean
     public WebSocketHandler gameWebSocketHandler() {
         return new PerConnectionWebSocketHandler(MyWebSocketHandler.class);
-    }
-
-    @Bean
-    public WebSocketHandler getRegisterWebSocketHandler(){
-        return new PerConnectionWebSocketHandler(RegisterWebSocketHandler.class);
     }
 }
