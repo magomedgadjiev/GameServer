@@ -43,10 +43,10 @@ public class UserController {
     @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
     public ResponseEntity<?> signIn(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
-            if (userProfile.isEmpty()) {
-                LOGGER.warn(ResponseMessage.BAD_REQUEST);
-                return new ResponseEntity<>(new Resp(2, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
-            }
+//            if (userProfile.isEmpty()) {
+//                LOGGER.warn(ResponseMessage.BAD_REQUEST);
+//                return new ResponseEntity<>(new Resp(2, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+//            }
             if (accountService.isSignUp(userProfile.getEmail(), userProfile.getPassword())) {
                 if (session.getAttribute(LOGIN) == null) {
                     session.setAttribute(LOGIN, true);
@@ -86,12 +86,12 @@ public class UserController {
     public ResponseEntity<?> setInfoUser(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
             if (session.getAttribute(LOGIN) != null) {
-                if (userProfile.isEmpty()) {
-                    accountService.getUser(session.getAttribute(EMAIL).toString()).setUsername(userProfile.getUsername());
-                    accountService.getUser(session.getAttribute(EMAIL).toString()).setPassword(userProfile.getPassword());
-                    LOGGER.info(ResponseMessage.SUCCESS);
-                    return ResponseEntity.ok(new Resp(0, ResponseMessage.SUCCESS));
-                }
+//                if (userProfile.isEmpty()) {
+//                    accountService.getUser(session.getAttribute(EMAIL).toString()).setUsername(userProfile.getUsername());
+//                    accountService.getUser(session.getAttribute(EMAIL).toString()).setPassword(userProfile.getPassword());
+//                    LOGGER.info(ResponseMessage.SUCCESS);
+//                    return ResponseEntity.ok(new Resp(0, ResponseMessage.SUCCESS));
+//                }
                 LOGGER.warn(ResponseMessage.BAD_REQUEST);
                 return new ResponseEntity<>(new Resp(2, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
             }
@@ -107,10 +107,10 @@ public class UserController {
     @RequestMapping(value = "/auth/regirstration", method = RequestMethod.POST)
     public ResponseEntity<?> signUp(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
-            if (userProfile.isEmpty()) {
-                LOGGER.warn(ResponseMessage.BAD_REQUEST);
-                return new ResponseEntity<>(new Resp(2, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
-            }
+//            if (userProfile.isEmpty()) {
+//                LOGGER.warn(ResponseMessage.BAD_REQUEST);
+//                return new ResponseEntity<>(new Resp(2, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+//            }
             if (accountService.isSignUp(userProfile.getEmail(), userProfile.getPassword())) {
                 LOGGER.warn(ResponseMessage.CONFLICT);
                 return new ResponseEntity<>(new Resp(3, ResponseMessage.CONFLICT), HttpStatus.CONFLICT);

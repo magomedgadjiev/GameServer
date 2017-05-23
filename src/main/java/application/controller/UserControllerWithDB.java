@@ -1,13 +1,15 @@
 package application.controller;
 
 import application.config.ResponseMessage;
-import application.models.*;
+import application.models.Resp;
+import application.models.RespWithUser;
+import application.models.RespWithUsers;
+import application.models.Test;
 import application.user.UserProfile;
 import application.user.UserProfileJDBCTemplate;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -41,7 +43,6 @@ public class UserControllerWithDB {
     }
 
 
-
     @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/getAll", method = RequestMethod.GET)
     public ResponseEntity<?> getAll() throws IOException {
@@ -62,12 +63,28 @@ public class UserControllerWithDB {
     @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
     public ResponseEntity<?> signIn(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
-            if (userProfile.isEmpty()) {
-                LOGGER.warn(ResponseMessage.BAD_REQUEST);
-                return new ResponseEntity<>(new Resp(2, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+            int key = 0;
+            if (userProfile.getEmail().isEmpty()) {
+                key = 10;
             }
-            UserProfile userProfile1 = userProfileJDBCTemplate.getUserProfile(userProfile.getEmail());
-            if (!userProfile1.getPassword().equals(userProfile.getPassword())){
+            if (userProfile.getPassword().isEmpty()) {
+                key += 1;
+            }
+            if (userProfile.ff(userProfile.getEmail())) {
+                key = 30 + key % 10;
+            }
+            if (userProfile.ff(userProfile.getPassword())) {
+                key = key / 10 + 3;
+            }
+            if (key != 0) {
+                return new ResponseEntity<>(new Resp(key, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+            }
+            userProfile = userProfileJDBCTemplate.getUserProfileByEmail(userProfile.getEmail());
+            if (userProfile == null) {
+                LOGGER.warn(ResponseMessage.REGISTRATION);
+                return new ResponseEntity<>(new Resp(1, ResponseMessage.REGISTRATION), HttpStatus.BAD_REQUEST);
+            }
+            if (!userProfile.getPassword().equals(userProfile.getPassword())) {
                 return new ResponseEntity<>(new Resp(2, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
             }
             if (session.getAttribute(LOGIN) == null) {
@@ -75,10 +92,7 @@ public class UserControllerWithDB {
                 session.setAttribute(EMAIL, userProfile.getEmail());
             }
             LOGGER.info(ResponseMessage.SUCCESS);
-            return ResponseEntity.ok(new RespWithUser(0, userProfileJDBCTemplate.getUserProfile(userProfile.getEmail())));
-        } catch (EmptyResultDataAccessException e) {
-            LOGGER.warn(ResponseMessage.REGISTRATION);
-            return new ResponseEntity<>(new Resp(1, ResponseMessage.REGISTRATION), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.ok(new RespWithUser(0, userProfile));
         } catch (RuntimeException ignored) {
             LOGGER.error(ignored.getMessage());
             return new ResponseEntity<>(new Resp(4, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -91,7 +105,7 @@ public class UserControllerWithDB {
         try {
             if (session.getAttribute(LOGIN) != null) {
                 LOGGER.info(ResponseMessage.SUCCESS);
-                return ResponseEntity.ok(new RespWithUser(0, (userProfileJDBCTemplate.getUserProfile((String) (session.getAttribute(EMAIL))))));
+                return ResponseEntity.ok(new RespWithUser(0, (userProfileJDBCTemplate.getUserProfileByEmail((String) (session.getAttribute(EMAIL))))));
             }
             LOGGER.warn(ResponseMessage.LOGIN);
             return new ResponseEntity<>(new Resp(1, ResponseMessage.LOGIN), HttpStatus.BAD_REQUEST);
@@ -106,13 +120,9 @@ public class UserControllerWithDB {
     public ResponseEntity<?> setInfoUser(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
             if (session.getAttribute(LOGIN) != null) {
-                if (!userProfile.isEmpty()) {
-                    userProfileJDBCTemplate.updateUserProfile(userProfile);
-                    LOGGER.info(ResponseMessage.SUCCESS);
-                    return ResponseEntity.ok(new Resp(0, ResponseMessage.SUCCESS));
-                }
-                LOGGER.warn(ResponseMessage.BAD_REQUEST);
-                return new ResponseEntity<>(new Resp(2, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+                userProfileJDBCTemplate.updateUserProfile(userProfile);
+                LOGGER.info(ResponseMessage.SUCCESS);
+                return ResponseEntity.ok(new Resp(0, ResponseMessage.SUCCESS));
             }
             LOGGER.warn(ResponseMessage.LOGIN);
             return new ResponseEntity<>(new Resp(1, ResponseMessage.LOGIN), HttpStatus.BAD_REQUEST);
@@ -129,18 +139,16 @@ public class UserControllerWithDB {
     @RequestMapping(value = "/auth/regirstration", method = RequestMethod.POST)
     public ResponseEntity<?> signUp(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
-            if (userProfile.isEmpty()) {
-                LOGGER.debug(ResponseMessage.BAD_REQUEST);
-                return new ResponseEntity<>(new Resp(2, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+            int key = userProfile.isGoodInf();
+            key = isDuplicate(userProfile.getUsername(), userProfile.getEmail(), key);
+            if (key != 0) {
+                return new ResponseEntity<>(new Resp(key, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
             }
             userProfileJDBCTemplate.create(userProfile.getUsername(), userProfile.getPassword(), userProfile.getEmail());
             session.setAttribute(LOGIN, true);
             session.setAttribute(EMAIL, userProfile.getEmail());
             LOGGER.info(ResponseMessage.SUCCESS + session.getId());
             return new ResponseEntity<>(new RespWithUser(0, userProfile), HttpStatus.CREATED);
-        } catch (DuplicateKeyException e) {
-            LOGGER.warn(ResponseMessage.CONFLICT);
-            return new ResponseEntity<>(new Resp(3, ResponseMessage.CONFLICT), HttpStatus.CONFLICT);
         } catch (RuntimeException ignored) {
             LOGGER.error(ignored.getMessage());
             return new ResponseEntity<>(new Resp(4, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -164,6 +172,22 @@ public class UserControllerWithDB {
     @RequestMapping(value = "/test", method = RequestMethod.POST)
     public ResponseEntity<?> test(@RequestBody Test test) throws IOException {
         return ResponseEntity.ok(test);
+    }
+
+    public int isDuplicate(String username, String email, int key) {
+        if (key / 100 == 0) {
+            if (userProfileJDBCTemplate.getUserProfileByEmail(email) != null) {
+                key = 200 + (key % 100);
+            }
+        }
+        if (key / 10 % 10 == 0) {
+            if (userProfileJDBCTemplate.getUserProfileByUsername(username) != null) {
+                int a = key % 100;
+                int b = key / 100;
+                key = b * 100 + 2 * 10 + a;
+            }
+        }
+        return key;
     }
 
     @Autowired

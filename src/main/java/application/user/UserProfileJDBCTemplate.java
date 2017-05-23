@@ -1,7 +1,9 @@
 package application.user;
 
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -53,16 +55,33 @@ public class UserProfileJDBCTemplate {
         LOGGER.info("insert success");
     }
 
-    public UserProfile getUserProfile(String email) {
+
+    public @Nullable UserProfile getUserProfileByEmail(String email) {
         final String sql = "SELECT * FROM user_project WHERE LOWER(email) = LOWER(?)";
-        final UserProfile user = jdbcTemplate.queryForObject(sql, new UserProfileMapper(), email);
-        LOGGER.info("getUserByEmail success");
-        return user;
+        try {
+            final UserProfile user = jdbcTemplate.queryForObject(sql, new UserProfileMapper(), email);
+            LOGGER.info("getUserByEmail success");
+            return user;
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+
+    }
+
+    public @Nullable UserProfile getUserProfileByUsername(String username) {
+        try {
+            final String sql = "SELECT * FROM user_project WHERE LOWER(nickname) = LOWER(?)";
+            final UserProfile user = jdbcTemplate.queryForObject(sql, new UserProfileMapper(), username);
+            LOGGER.info("getUserByEmail success");
+            return user;
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public void updateUserProfile(UserProfile userProfile) {
         if (userProfile.getUsername() != null) {
-            final String sql = "UPDATE user_project SET nickname = ? WHERE LOWER(email) = LOWER(?)";
+            final String sql = "UPDATE user_project SET lower(nickname) = lower(?) WHERE LOWER(email) = LOWER(?)";
             jdbcTemplate.update(sql, userProfile.getUsername(), userProfile.getEmail());
         }
 
