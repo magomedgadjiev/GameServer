@@ -34,23 +34,27 @@ public class RemotePointService {
 
     public synchronized void update(@NotNull WebSocketSession webSocketSession, @NotNull TextMessage textMessage) throws IOException, com.fasterxml.jackson.core.JsonParseException, com.fasterxml.jackson.databind.JsonMappingException {
         try {
-            String str = textMessage.getPayload();
             final Message message = objectMapper.readValue(textMessage.getPayload(), Message.class);
-            if (message.getType() == 1) {
-                setLogin(message.getContent(), webSocketSession.getId());
-            } else {
-                updateRoomService(message.getContent());
+            switch (message.getType()) {
+                case 1: {
+                    setLogin(message.getContent(), webSocketSession.getId());
+                    LOGGER.info("update success");
+                    break;
+                }
+                case 2: {
+                    updateRoomService(message.getContent());
+                    LOGGER.info("update success");
+                }
+                default: break;
             }
-        } catch (RuntimeException e){
+        } catch (RuntimeException e) {
             LOGGER.error(e.getMessage());
         }
-
-        LOGGER.info("update success");
     }
 
     public void updateRoomService(@NotNull Object object) throws IOException {
         final LinkedHashMap linkedHashMap = (LinkedHashMap) object;
-        final GameSession gameSession = new GameSession((String)linkedHashMap.get("loginFirst"), (String)linkedHashMap.get("loginSecond"), (String)linkedHashMap.get("field"));
+        final GameSession gameSession = new GameSession((String) linkedHashMap.get("loginFirst"), (String) linkedHashMap.get("loginSecond"), (String) linkedHashMap.get("field"));
         if (gameSession.isEnd()) {
             removeUser(gameSession.getFirst());
             gameRoomsService.removeUser(gameSession);
@@ -58,9 +62,10 @@ public class RemotePointService {
             gameRoomsService.updateField(gameSession);
         }
     }
+
     public void setLogin(@NotNull Object login, String id) throws IOException {
         gameRoomsService.updateLogin((String) login, id);
-        LOGGER.info("update success");
+        LOGGER.info("set" + login + "success");
     }
 
     public void removeUser(String key) {

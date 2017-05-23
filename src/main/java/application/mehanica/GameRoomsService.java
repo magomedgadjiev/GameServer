@@ -57,12 +57,12 @@ public class GameRoomsService {
     public synchronized void updateLogin(String login, String id) throws IOException, com.fasterxml.jackson.core.JsonProcessingException {
         if (gameSession.getLoginFirst() == null || gameSession.getFirst().equals(id)){
             gameSession.setLoginFirst(login);
-            LOGGER.info("create loginFirstsuccess");
+            LOGGER.info("create loginFirstsuccess = " + login);
         } else {
             gameSession.setLoginSecond(login);
             gameSession.setField("@@@@@@@@@");
             addGameSession(gameSession);
-            LOGGER.info("create loginFirst and create rooms success");
+            LOGGER.info("create " + login + " as loginSecond and create rooms success");
             webSocketService.sendMessageToUser(id, objectMapper.writeValueAsString(gameSession));
             webSocketService.sendMessageToUser(gameSession.getFirst(), objectMapper.writeValueAsString(gameSession));
             gameSession = new GameSession();
