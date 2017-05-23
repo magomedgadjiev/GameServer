@@ -55,9 +55,9 @@ public class UserProfileJDBCTemplate {
 
     public UserProfile getUserProfile(String email) {
         final String sql = "SELECT * FROM user_project WHERE LOWER(email) = LOWER(?)";
-        final UserProfile users = jdbcTemplate.queryForObject(sql, new UserProfileMapper(), email);
+        final UserProfile user = jdbcTemplate.queryForObject(sql, new UserProfileMapper(), email);
         LOGGER.info("getUserByEmail success");
-        return users;
+        return user;
     }
 
     public void updateUserProfile(UserProfile userProfile) {

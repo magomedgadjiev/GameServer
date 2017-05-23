@@ -70,7 +70,7 @@ public class UserControllerTest {
         mockMvc.perform(post("/api/DB/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(userProfile))
-        ).andExpect(status().isOk());
+        ).andExpect(status().isBadRequest());
     }
 
     @Test

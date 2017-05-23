@@ -40,6 +40,8 @@ public class UserControllerWithDB {
         return ResponseEntity.ok(new Resp(0, ResponseMessage.SUCCESS));
     }
 
+
+
     @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/getAll", method = RequestMethod.GET)
     public ResponseEntity<?> getAll() throws IOException {
@@ -66,7 +68,7 @@ public class UserControllerWithDB {
             }
             UserProfile userProfile1 = userProfileJDBCTemplate.getUserProfile(userProfile.getEmail());
             if (!userProfile1.getPassword().equals(userProfile.getPassword())){
-                return new ResponseEntity<>(new Resp(1, ResponseMessage.REGISTRATION), HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(new Resp(2, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
             }
             if (session.getAttribute(LOGIN) == null) {
                 session.setAttribute(LOGIN, true);
