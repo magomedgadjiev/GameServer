@@ -21,6 +21,8 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.jws.soap.SOAPBinding;
+
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
@@ -62,20 +64,28 @@ public class UserControllerTest {
     @Test
     public void testLogin() throws Exception {
         final Gson gson = new Gson();
+        final UserProfile userProfile = new UserProfile();
+        userProfile.setEmail("a");
+        userProfile.setPassword("a");
+        userProfile.setUsername("a");
         mockMvc.perform(post("/api/DB/auth/regirstration")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(userProfile)));
+                .content(gson.toJson(userProfile))).andExpect(status().isCreated());
         session.setAttribute(UserControllerWithDB.EMAIL, userProfile.getEmail());
         session.setAttribute(UserControllerWithDB.LOGIN, true);
         mockMvc.perform(post("/api/DB/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(userProfile))
-        ).andExpect(status().isBadRequest());
+        ).andExpect(status().isOk());
     }
 
     @Test
     public void testGetInfoUser() throws Exception {
         final Gson gson = new Gson();
+        final UserProfile userProfile = new UserProfile();
+        userProfile.setUsername("b");
+        userProfile.setPassword("b");
+        userProfile.setEmail("b");
         mockMvc.perform(post("/api/DB/auth/regirstration")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(userProfile)));
@@ -97,6 +107,10 @@ public class UserControllerTest {
     @Test
     public void testSetInfoUser() throws Exception {
         final Gson gson = new Gson();
+        final UserProfile userProfile = new UserProfile();
+        userProfile.setPassword("c");
+        userProfile.setEmail("c");
+        userProfile.setUsername("c");
         mockMvc.perform(post("/api/DB/auth/regirstration")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(userProfile)));
