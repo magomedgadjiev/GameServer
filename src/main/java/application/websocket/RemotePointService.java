@@ -57,6 +57,7 @@ public class RemotePointService {
         final GameSession gameSession = new GameSession((String) linkedHashMap.get("loginFirst"), (String) linkedHashMap.get("loginSecond"), (String) linkedHashMap.get("field"));
         if (gameSession.isEnd()) {
             gameRoomsService.removeRoom(gameSession);
+            LOGGER.info("game over");
         } else {
             gameRoomsService.updateField(gameSession);
         }

@@ -86,9 +86,9 @@ public class GameRoomsService {
     public void removeRoom(GameSession sessionUpdate) throws IOException, JsonProcessingException {
         for (GameSession session : gameSessions) {
             if (session.equals(sessionUpdate)) {
-                gameSessions.remove(session);
                 webSocketService.sendMessageToUser(session.getSecond(), objectMapper.writeValueAsString(gameSession));
                 webSocketService.sendMessageToUser(session.getFirst(), objectMapper.writeValueAsString(gameSession));
+                gameSessions.remove(session);
                 LOGGER.info("game over");
                 return;
             }
