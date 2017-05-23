@@ -41,6 +41,12 @@ public class UserProfileJDBCTemplate {
         LOGGER.info("drop success");
     }
 
+    public void deleteUser(String login) {
+        final String sql = "DELETE FROM user_project WHERE lower(nickname) = lower(?)";
+        jdbcTemplate.update(sql, login);
+        LOGGER.info("delete success");
+    }
+
     public void create(String nickname, String password, String email) {
         final String sql = "INSERT INTO user_project(nickname, password, email) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, nickname, password, email);

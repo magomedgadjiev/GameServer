@@ -1,10 +1,7 @@
 package application.controller;
 
 import application.config.ResponseMessage;
-import application.models.Resp;
-import application.models.RespWithUser;
-import application.models.RespWithUsers;
-import application.models.Test;
+import application.models.*;
 import application.user.UserProfile;
 import application.user.UserProfileJDBCTemplate;
 import org.apache.log4j.Logger;
@@ -52,6 +49,14 @@ public class UserControllerWithDB {
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public ResponseEntity<?> deleteUser(@RequestBody UserProfile userProfile) throws IOException {
+        userProfileJDBCTemplate.deleteUser(userProfile.getUsername());
+        LOGGER.info("delete user success");
+        return ResponseEntity.ok(null);
+    }
+
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
     public ResponseEntity<?> signIn(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
@@ -59,7 +64,10 @@ public class UserControllerWithDB {
                 LOGGER.warn(ResponseMessage.BAD_REQUEST);
                 return new ResponseEntity<>(new Resp(2, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
             }
-            userProfileJDBCTemplate.getUserProfile(userProfile.getEmail());
+            UserProfile userProfile1 = userProfileJDBCTemplate.getUserProfile(userProfile.getEmail());
+            if (!userProfile1.getPassword().equals(userProfile.getPassword())){
+                return new ResponseEntity<>(new Resp(1, ResponseMessage.REGISTRATION), HttpStatus.BAD_REQUEST);
+            }
             if (session.getAttribute(LOGIN) == null) {
                 session.setAttribute(LOGIN, true);
                 session.setAttribute(EMAIL, userProfile.getEmail());
