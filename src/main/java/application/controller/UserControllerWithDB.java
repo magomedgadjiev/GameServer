@@ -77,6 +77,9 @@ public class UserControllerWithDB {
                 key = key / 10 + 3;
             }
             if (key != 0) {
+                if (key / 10 == 0){
+                    key += 70
+                }
                 return new ResponseEntity<>(new Resp(key, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
             }
             userProfile = userProfileJDBCTemplate.getUserProfileByEmail(userProfile.getEmail());
@@ -92,7 +95,7 @@ public class UserControllerWithDB {
                 session.setAttribute(EMAIL, userProfile.getEmail());
             }
             LOGGER.info(ResponseMessage.SUCCESS);
-            return ResponseEntity.ok(new RespWithUser(0, userProfile));
+            return ResponseEntity.ok(new RespWithUser(777, userProfile));
         } catch (RuntimeException ignored) {
             LOGGER.error(ignored.getMessage());
             return new ResponseEntity<>(new Resp(4, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -142,13 +145,19 @@ public class UserControllerWithDB {
             int key = userProfile.isGoodInf();
             key = isDuplicate(userProfile.getUsername(), userProfile.getEmail(), key);
             if (key != 0) {
+                if (key / 10 == 0){
+                    key += 70;
+                }
+                if (key / 100 == 0){
+                    key += 700;
+                }
                 return new ResponseEntity<>(new Resp(key, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
             }
             userProfileJDBCTemplate.create(userProfile.getUsername(), userProfile.getPassword(), userProfile.getEmail());
             session.setAttribute(LOGIN, true);
             session.setAttribute(EMAIL, userProfile.getEmail());
             LOGGER.info(ResponseMessage.SUCCESS + session.getId());
-            return new ResponseEntity<>(new RespWithUser(0, userProfile), HttpStatus.CREATED);
+            return new ResponseEntity<>(new RespWithUser(777, userProfile), HttpStatus.CREATED);
         } catch (RuntimeException ignored) {
             LOGGER.error(ignored.getMessage());
             return new ResponseEntity<>(new Resp(4, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
