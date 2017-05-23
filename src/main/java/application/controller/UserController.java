@@ -131,7 +131,7 @@ public class UserController {
     public ResponseEntity<?> getMMR(@PathVariable(value = "count") int count) throws IOException {
         try {
             final List<UserProfile> userProfiles = accountService.sort();
-            final RespWithUsers respWithUsers = new RespWithUsers();
+            final RespWithUsers respWithUsers = new RespWithUsers(key, userProfiles);
             for (int i = 0; i < count; ++i) {
                 respWithUsers.addUser(userProfiles.get(i));
             }

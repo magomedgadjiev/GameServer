@@ -46,6 +46,7 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession webSocketSession, CloseStatus closeStatus) throws Exception {
         final String id = webSocketSession.getId();
         remotePointService.removeUser(id);
+
         LOGGER.info("connection close");
     }
 

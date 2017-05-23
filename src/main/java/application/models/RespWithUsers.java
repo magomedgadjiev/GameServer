@@ -8,6 +8,11 @@ public class RespWithUsers {
     private int key;
     private List<UserProfile> userProfiles;
 
+    public RespWithUsers(int key, List<UserProfile> userProfiles) {
+        this.key = key;
+        this.userProfiles = userProfiles;
+    }
+
     public List<UserProfile> getUserProfiles() {
         return userProfiles;
     }

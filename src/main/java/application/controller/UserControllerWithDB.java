@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by magomed on 29.03.17.
@@ -42,6 +41,14 @@ public class UserControllerWithDB {
         }
         LOGGER.info(ResponseMessage.SUCCESS);
         return ResponseEntity.ok(new Resp(0, ResponseMessage.SUCCESS));
+    }
+
+    @CrossOrigin(origins = "*", maxAge = 3600)
+    @RequestMapping(value = "/getAll", method = RequestMethod.GET)
+    public ResponseEntity<?> getAll() throws IOException {
+        final RespWithUsers respWithUsers = new RespWithUsers(0, userProfileJDBCTemplate.getUsers(userProfileJDBCTemplate.getCount()));
+        LOGGER.info("get all info db success");
+        return ResponseEntity.ok(respWithUsers);
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
@@ -134,10 +141,7 @@ public class UserControllerWithDB {
     @RequestMapping(value = "/stats/{count}", method = RequestMethod.GET)
     public ResponseEntity<?> getMMR(@PathVariable(value = "count", required = false) int count) throws IOException {
         try {
-            final List<UserProfile> userProfiles = userProfileJDBCTemplate.getUsers(count);
-            final RespWithUsers respWithUsers = new RespWithUsers();
-            respWithUsers.getUserProfiles().addAll(userProfiles);
-            respWithUsers.setKey(0);
+            final RespWithUsers respWithUsers = new RespWithUsers(0, userProfileJDBCTemplate.getUsers(count));
             LOGGER.info(ResponseMessage.SUCCESS);
             return ResponseEntity.ok(respWithUsers);
         } catch (RuntimeException ignored) {

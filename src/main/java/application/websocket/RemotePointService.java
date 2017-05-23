@@ -69,7 +69,7 @@ public class RemotePointService {
     }
 
     public void removeUser(String key) {
+        gameRoomsService.removeRoomBySocketId(key);
         webSocketService.removeSocket(key);
     }
-
 }

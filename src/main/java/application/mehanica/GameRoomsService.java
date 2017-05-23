@@ -93,6 +93,13 @@ public class GameRoomsService {
                 return;
             }
         }
-
+    }
+    public void removeRoomBySocketId(String id){
+        for (GameSession session : gameSessions) {
+            if (session.getFirst().equals(id) || session.getSecond().equals(id)) {
+                gameSessions.remove(session);
+                return;
+            }
+        }
     }
 }
