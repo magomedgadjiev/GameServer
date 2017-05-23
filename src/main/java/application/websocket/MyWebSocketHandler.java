@@ -35,7 +35,6 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession webSocketSession, TextMessage message) throws AuthenticationException, IOException {
         remotePointService.update(webSocketSession, message);
-        LOGGER.info("send message success");
     }
 
     @Override

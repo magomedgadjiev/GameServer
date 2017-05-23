@@ -43,12 +43,17 @@ public class GameRoomsService {
         gameSessions.add(session);
     }
 
-    public void updateField(GameSession gameSessionUpdate) throws IOException, com.fasterxml.jackson.core.JsonProcessingException {
+    public void updateField(GameSession gameSessionUpdate, String id) throws IOException, com.fasterxml.jackson.core.JsonProcessingException {
         for (GameSession session : gameSessions) {
             if (session.equals(gameSessionUpdate)) {
                 session.setField(gameSessionUpdate.getField());
                 webSocketService.sendMessageToUser(session.getFirst(), objectMapper.writeValueAsString(session));
                 webSocketService.sendMessageToUser(session.getSecond(), objectMapper.writeValueAsString(session));
+                if (session.getFirst().equals(id)){
+                    LOGGER.info(session.getLoginFirst() + "put a cross");
+                } else {
+                    LOGGER.info(session.getLoginSecond() + "put a foot");
+                }
                 return;
             }
         }
