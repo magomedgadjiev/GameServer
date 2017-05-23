@@ -1,7 +1,6 @@
 package application.user;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,16 +11,24 @@ public class UserProfile implements Comparable<UserProfile> {
     private String password;
     @JsonProperty
     private String email;
-
-    @JsonIgnore
+    @JsonProperty
     private int wins;
-    @JsonIgnore
+    @JsonProperty
     private int losses;
-    @JsonIgnore
+    @JsonProperty
     private int draws;
 
+    public UserProfile(String username, String password, String email, int wins, int losses, int draws) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.wins = wins;
+        this.losses = losses;
+        this.draws = draws;
+    }
+
     @JsonCreator
-    public UserProfile(@JsonProperty("username") String username, @JsonProperty("password")String password, @JsonProperty("email")String email) {
+    public UserProfile(@JsonProperty("username") String username, @JsonProperty("password") String password, @JsonProperty("email") String email) {
         this.username = username;
         this.password = password;
         this.email = email;
