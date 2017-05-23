@@ -42,24 +42,23 @@ public class RemotePointService {
                     break;
                 }
                 case 2: {
-                    updateRoomService(message.getContent(), webSocketSession.getId());
+                    updateRoomService(message.getContent());
                     LOGGER.info("update success");
                 }
                 default: break;
             }
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error(e.getMessage() + "error");
         }
     }
 
-    public void updateRoomService(@NotNull Object object, String id) throws IOException {
+    public void updateRoomService(@NotNull Object object) throws IOException {
         final LinkedHashMap linkedHashMap = (LinkedHashMap) object;
         final GameSession gameSession = new GameSession((String) linkedHashMap.get("loginFirst"), (String) linkedHashMap.get("loginSecond"), (String) linkedHashMap.get("field"));
         if (gameSession.isEnd()) {
-            removeUser(gameSession.getFirst());
             gameRoomsService.removeRoom(gameSession);
         } else {
-            gameRoomsService.updateField(gameSession,id);
+            gameRoomsService.updateField(gameSession);
         }
     }
 
