@@ -33,9 +33,8 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
     }
 
     @Override
-    protected void handleTextMessage(WebSocketSession webSocketSession, TextMessage message) throws AuthenticationException, IOException {
+    protected void handleTextMessage(WebSocketSession webSocketSession, TextMessage message) throws AuthenticationException, IOException, com.fasterxml.jackson.core.JsonParseException, com.fasterxml.jackson.databind.JsonMappingException {
         remotePointService.update(webSocketSession, message);
-        LOGGER.info("send message success");
     }
 
     @Override
