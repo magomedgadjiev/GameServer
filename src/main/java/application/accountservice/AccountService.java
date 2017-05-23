@@ -17,10 +17,6 @@ public class AccountService {
         profiles.put(userProfile.getEmail(), userProfile);
     }
 
-    public int getSize() {
-        return profiles.size();
-    }
-
     public UserProfile getUser(String id) {
         return profiles.get(id);
     }

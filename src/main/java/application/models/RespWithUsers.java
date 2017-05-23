@@ -13,6 +13,10 @@ public class RespWithUsers {
         this.userProfiles = userProfiles;
     }
 
+    public RespWithUsers() {
+
+    }
+
     public List<UserProfile> getUserProfiles() {
         return userProfiles;
     }
