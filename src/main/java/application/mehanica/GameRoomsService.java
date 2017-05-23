@@ -49,7 +49,7 @@ public class GameRoomsService {
                 session.setField(gameSessionUpdate.getField());
                 webSocketService.sendMessageToUser(session.getFirst(), objectMapper.writeValueAsString(session));
                 webSocketService.sendMessageToUser(session.getSecond(), objectMapper.writeValueAsString(session));
-                if (session.getFirst().equals(id)){
+                if (session.getLoginFirst().equals(gameSessionUpdate.getLoginFirst())){
                     LOGGER.info(session.getLoginFirst() + "put a cross");
                 } else {
                     LOGGER.info(session.getLoginSecond() + "put a foot");

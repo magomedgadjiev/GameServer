@@ -59,7 +59,7 @@ public class RemotePointService {
             removeUser(gameSession.getFirst());
             gameRoomsService.removeUser(gameSession);
         } else {
-            gameRoomsService.updateField(gameSession, id);
+            gameRoomsService.updateField(gameSession,id);
         }
     }
 
