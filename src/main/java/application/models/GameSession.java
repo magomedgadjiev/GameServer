@@ -66,7 +66,20 @@ public class GameSession {
     }
 
     public boolean isEnd(){
-        return field.equals("EMPTY");
+        switch (field) {
+            case "KREST":{
+                return true;
+            }
+            case "ZERO":{
+                return true;
+            }
+            case "NICH":{
+                return true;
+            }
+            default: {
+                return false;
+            }
+        }
     }
 
     public String getLoginFirst() {

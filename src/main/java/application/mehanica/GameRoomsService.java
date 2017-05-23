@@ -2,6 +2,7 @@ package application.mehanica;
 
 import application.models.GameSession;
 import application.models.WebSocketService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
@@ -82,10 +83,14 @@ public class GameRoomsService {
         }
     }
 
-    public void removeUser(GameSession sessionUpdate) {
+    public void removeRoom(GameSession sessionUpdate) throws IOException, JsonProcessingException {
         for (GameSession session : gameSessions) {
             if (session.equals(sessionUpdate)) {
                 gameSessions.remove(session);
+                webSocketService.sendMessageToUser(session.getSecond(), objectMapper.writeValueAsString(gameSession));
+                webSocketService.sendMessageToUser(session.getFirst(), objectMapper.writeValueAsString(gameSession));
+                LOGGER.info("game over");
+                return;
             }
         }
 

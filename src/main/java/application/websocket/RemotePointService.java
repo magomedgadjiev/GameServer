@@ -47,7 +47,7 @@ public class RemotePointService {
                 }
                 default: break;
             }
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             LOGGER.error(e.getMessage());
         }
     }
@@ -57,7 +57,7 @@ public class RemotePointService {
         final GameSession gameSession = new GameSession((String) linkedHashMap.get("loginFirst"), (String) linkedHashMap.get("loginSecond"), (String) linkedHashMap.get("field"));
         if (gameSession.isEnd()) {
             removeUser(gameSession.getFirst());
-            gameRoomsService.removeUser(gameSession);
+            gameRoomsService.removeRoom(gameSession);
         } else {
             gameRoomsService.updateField(gameSession,id);
         }
