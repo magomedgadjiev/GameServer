@@ -2,6 +2,7 @@ package application.mehanica;
 
 import application.models.GameSession;
 import application.models.WebSocketService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -18,6 +19,7 @@ import java.util.List;
 @Service
 public class GameRoomsService {
     private GameSession gameSession;
+    private ObjectMapper objectMapper = new ObjectMapper();
     private WebSocketService webSocketService;
     private List<GameSession> gameSessions = new ArrayList<>();
     private static final Logger LOGGER = Logger.getLogger(GameRoomsService.class);
@@ -41,21 +43,19 @@ public class GameRoomsService {
         gameSessions.add(session);
     }
 
-    public void updateField(GameSession gameSessionUpdate) throws IOException {
-        Gson gson = new Gson();
-        for (GameSession gameSession : gameSessions) {
-            if (gameSession.equals(gameSessionUpdate)) {
-                gameSession.setField(gameSessionUpdate.getField());
-                webSocketService.sendMessageToUser(gameSession.getFirst(), gson.toJson(gameSession));
-                webSocketService.sendMessageToUser(gameSession.getSecond(), gson.toJson(gameSession));
+    public void updateField(GameSession gameSessionUpdate) throws IOException, com.fasterxml.jackson.core.JsonProcessingException {
+        for (GameSession session : gameSessions) {
+            if (session.equals(gameSessionUpdate)) {
+                session.setField(gameSessionUpdate.getField());
+                webSocketService.sendMessageToUser(session.getFirst(), objectMapper.writeValueAsString(session));
+                webSocketService.sendMessageToUser(session.getSecond(), objectMapper.writeValueAsString(session));
                 return;
             }
         }
     }
 
-    public synchronized void updateLogin(String login, String id) throws IOException {
-        final Gson gson = new Gson();
-        if (gameSession.getLoginFirst() == null){
+    public synchronized void updateLogin(String login, String id) throws IOException, com.fasterxml.jackson.core.JsonProcessingException {
+        if (gameSession.getLoginFirst() == null || gameSession.getFirst().equals(id)){
             gameSession.setLoginFirst(login);
             LOGGER.info("create loginFirstsuccess");
         } else {
@@ -63,14 +63,13 @@ public class GameRoomsService {
             gameSession.setField("@@@@@@@@@");
             addGameSession(gameSession);
             LOGGER.info("create loginFirst and create rooms success");
-            webSocketService.sendMessageToUser(id, gson.toJson(gameSession));
-            webSocketService.sendMessageToUser(gameSession.getFirst(), gson.toJson(gameSession));
+            webSocketService.sendMessageToUser(id, objectMapper.writeValueAsString(gameSession));
+            webSocketService.sendMessageToUser(gameSession.getFirst(), objectMapper.writeValueAsString(gameSession));
             gameSession = new GameSession();
         }
     }
 
     public void addUser(@NotNull String id) throws IOException {
-        Gson gson = new Gson();
         if (gameSession.getFirst() == null) {
             gameSession.setFirst(id);
         } else {

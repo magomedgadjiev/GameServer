@@ -54,7 +54,7 @@ public class WebSocketService {
             throw new IOException("session is closed or not exsists");
         }
         try {
-            webSocketSession.sendMessage(new TextMessage(gson.toJson(new Messager(message))));
+            webSocketSession.sendMessage(new TextMessage(message));
         } catch (JsonProcessingException | WebSocketException e) {
             throw new IOException("Unnable to send message", e);
         }

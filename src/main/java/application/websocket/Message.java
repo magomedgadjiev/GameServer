@@ -14,7 +14,7 @@ public class Message<T> {
     private @NotNull T content;
 
     @JsonCreator
-    public Message(@JsonProperty("content") T content, @JsonProperty("type") int type ) {
+    public Message(@JsonProperty("type") int type, @JsonProperty("content") T content) {
         this.content = content;
         this.type = type;
     }
