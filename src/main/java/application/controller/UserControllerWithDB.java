@@ -78,7 +78,7 @@ public class UserControllerWithDB {
             }
             if (key != 0) {
                 if (key / 10 == 0){
-                    key += 70
+                    key += 70;
                 }
                 return new ResponseEntity<>(new Resp(key, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
             }
