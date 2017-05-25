@@ -93,12 +93,13 @@ public class UserControllerWithDB {
                 }
                 return new ResponseEntity<>(new Resp(key, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
             }
+            String passwoord = null;
             userProfile = userProfileJDBCTemplate.getUserProfileByEmail(userProfile.getEmail());
             if (userProfile == null) {
                 LOGGER.warn(ResponseMessage.REGISTRATION);
                 return new ResponseEntity<>(new Resp(1, ResponseMessage.REGISTRATION), HttpStatus.BAD_REQUEST);
             }
-            if (!userProfile.getPassword().equals(userProfile.getPassword())) {
+            if (!userProfile.getPassword().equals(passwoord)) {
                 return new ResponseEntity<>(new Resp(2, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
             }
             if (session.getAttribute(LOGIN) == null) {
