@@ -2,6 +2,7 @@ package application.test.controllers;
 
 import application.controller.UserControllerWithDB;
 import application.user.UserProfile;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
 
@@ -17,11 +18,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrint;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.*;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.jws.soap.SOAPBinding;
+
+import java.sql.Connection;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -34,6 +38,8 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @AutoConfigureMockMvc(print = MockMvcPrint.NONE)
 public class UserControllerTest {
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
     private UserProfile userProfile = new UserProfile("username", "password", "email");
 
     @Autowired
@@ -42,85 +48,60 @@ public class UserControllerTest {
     MockHttpSession session = new MockHttpSession();
 
     @Before
-    public void init() throws Exception {
-        final Gson gson = new Gson();
-        mockMvc.perform(post("/api/DB/auth/regirstration")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(userProfile)));
+    public void init(){
+        String Sql = "truncate table user_project";
+        jdbcTemplate.execute(Sql);
     }
 
     @Test
     public void testRegirstration() throws Exception {
-//        final Gson gson = new Gson();
-//        final UserProfile userProfile2 = new UserProfile();
-//        userProfile2.setUsername("a");
-//        userProfile2.setPassword("a");
-//        mockMvc.perform(post("/api/DB/auth/regirstration")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(gson.toJson(userProfile2))
-//        ).andExpect(status().isBadRequest());
+        ObjectMapper objectMapper = new ObjectMapper();
+        userProfile.setEmail(",");
+        userProfile.setUsername("a");
+        userProfile.setPassword("a");
+        mockMvc.perform(post("/api/DB/auth/regirstration")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userProfile))
+        ).andExpect(status().isBadRequest());
     }
 
-//    @Test
-//    public void testLogin() throws Exception {
-//        final Gson gson = new Gson();
-//        final UserProfile userProfile = new UserProfile();
-//        userProfile.setEmail("a");
-//        userProfile.setPassword("a");
-//        userProfile.setUsername("a");
-//        mockMvc.perform(post("/api/DB/auth/regirstration")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(gson.toJson(userProfile))).andExpect(status().isCreated());
-//        session.setAttribute(UserControllerWithDB.EMAIL, userProfile.getEmail());
-//        session.setAttribute(UserControllerWithDB.LOGIN, true);
-//        mockMvc.perform(post("/api/DB/auth/login")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(gson.toJson(userProfile))
-//        ).andExpect(status().isOk());
-//    }
+    @Test
+    public void testLogin() throws Exception {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        userProfile.setEmail("b");
+        userProfile.setPassword("b");
+        userProfile.setUsername("b");
+        mockMvc.perform(post("/api/DB/auth/regirstration")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userProfile))).andExpect(status().isCreated());
+        session.setAttribute(UserControllerWithDB.EMAIL, userProfile.getEmail());
+        session.setAttribute(UserControllerWithDB.LOGIN, true);
+        mockMvc.perform(post("/api/DB/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userProfile))
+        ).andExpect(status().isOk());
+    }
 
     @Test
     public void testGetInfoUser() throws Exception {
-        final Gson gson = new Gson();
-        final UserProfile userProfile = new UserProfile();
-        userProfile.setUsername("b");
-        userProfile.setPassword("b");
-        userProfile.setEmail("b");
+        final ObjectMapper objectMapper = new ObjectMapper();
+        userProfile.setUsername("c");
+        userProfile.setPassword("c");
+        userProfile.setEmail("c");
         mockMvc.perform(post("/api/DB/auth/regirstration")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(userProfile)));
+                .content(objectMapper.writeValueAsString(userProfile))).andExpect(status().isCreated());
         session.setAttribute(UserControllerWithDB.EMAIL, userProfile.getEmail());
         session.setAttribute(UserControllerWithDB.LOGIN, true);
 
         mockMvc.perform(get("/api/DB/user/getInfoUser")
                 .session(session)
         ).andExpect(status().isOk());
-
     }
 
     @Test
     public void testSignOut() throws Exception {
         mockMvc.perform(get("/api/DB/auth/signOut")
         ).andExpect(status().isOk());
-    }
-
-    @Test
-    public void testSetInfoUser() throws Exception {
-        final Gson gson = new Gson();
-        final UserProfile userProfile = new UserProfile();
-        userProfile.setPassword("c");
-        userProfile.setEmail("c");
-//        userProfile.setUsername("c");
-//        mockMvc.perform(post("/api/DB/auth/regirstration")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(gson.toJson(userProfile)));
-//        session.setAttribute(UserControllerWithDB.EMAIL, userProfile.getEmail());
-//        session.setAttribute(UserControllerWithDB.LOGIN, true);
-//        final UserProfile userProfile1 = new UserProfile("aa", "dd", "email");
-//        mockMvc.perform(post("/api/DB/user/setInfoUser")
-//                .session(session)
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(gson.toJson(userProfile1))
-//        ).andExpect(status().isOk());
     }
 }
