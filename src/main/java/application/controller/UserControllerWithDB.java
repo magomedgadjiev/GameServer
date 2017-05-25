@@ -30,7 +30,7 @@ public class UserControllerWithDB {
 
     private UserProfileJDBCTemplate userProfileJDBCTemplate;
 
-    @CrossOrigin(origins = "http://vlad-maxim-magomed-game.herokuapp.com", maxAge = 3600)
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/auth/signOut", method = RequestMethod.GET)
     public ResponseEntity<?> signOut(HttpSession session) throws IOException {
         if (session.getAttribute(LOGIN) != null) {
@@ -41,7 +41,7 @@ public class UserControllerWithDB {
     }
 
 
-    @CrossOrigin(origins = "http://vlad-maxim-magomed-game.herokuapp.com", maxAge = 3600)
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/getAll", method = RequestMethod.GET)
     public ResponseEntity<?> getAll() throws IOException {
         final RespWithUsers respWithUsers = new RespWithUsers(0, userProfileJDBCTemplate.getUsers(userProfileJDBCTemplate.getCount()));
@@ -49,7 +49,7 @@ public class UserControllerWithDB {
         return ResponseEntity.ok(respWithUsers);
     }
 
-    @CrossOrigin(origins = "http://vlad-maxim-magomed-game.herokuapp.com", maxAge = 3600)
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public ResponseEntity<?> deleteUser(@RequestBody UserProfile userProfile) throws IOException {
         userProfileJDBCTemplate.deleteUser(userProfile.getUsername());
@@ -57,7 +57,7 @@ public class UserControllerWithDB {
         return ResponseEntity.ok(null);
     }
 
-    @CrossOrigin(origins = "http://vlad-maxim-magomed-game.herokuapp.com", maxAge = 3600)
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/user/update", method = RequestMethod.POST)
     public ResponseEntity<?> deleteUser(@RequestBody RatingUpdate ratingUpdate, HttpSession session) throws IOException {
         try {
@@ -70,7 +70,7 @@ public class UserControllerWithDB {
         }
     }
 
-    @CrossOrigin(origins = "http://vlad-maxim-magomed-game.herokuapp.com", maxAge = 3600)
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
     public ResponseEntity<?> signIn(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
@@ -87,14 +87,13 @@ public class UserControllerWithDB {
             if (userProfile.ff(userProfile.getPassword())) {
                 key = key / 10 + 3;
             }
-
             if (key != 0) {
                 if (key / 10 == 0) {
                     key += 70;
                 }
                 return new ResponseEntity<>(new Resp(key, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
             }
-            String passwoord = null;
+            String passwoord = userProfile.getPassword();
             userProfile = userProfileJDBCTemplate.getUserProfileByEmail(userProfile.getEmail());
             if (userProfile == null) {
                 LOGGER.warn(ResponseMessage.REGISTRATION);
@@ -115,7 +114,7 @@ public class UserControllerWithDB {
         }
     }
 
-    @CrossOrigin(origins = "http://vlad-maxim-magomed-game.herokuapp.com", maxAge = 3600)
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/user/getInfoUser", method = RequestMethod.GET)
     public ResponseEntity<?> getInfoUser(HttpSession session) throws IOException {
         try {
@@ -131,7 +130,7 @@ public class UserControllerWithDB {
         }
     }
 
-    @CrossOrigin(origins = "http://vlad-maxim-magomed-game.herokuapp.com", maxAge = 3600)
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/user/user", method = RequestMethod.POST)
     public ResponseEntity<?> gg(@RequestBody RatingUpdate ratingUpdate, HttpSession session) throws IOException {
         try {
@@ -145,7 +144,7 @@ public class UserControllerWithDB {
     }
 
 
-    @CrossOrigin(origins = "http://vlad-maxim-magomed-game.herokuapp.com", maxAge = 3600)
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/user/setInfoUser", method = RequestMethod.POST)
     public ResponseEntity<?> setInfoUser(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
@@ -165,7 +164,7 @@ public class UserControllerWithDB {
         }
     }
 
-    @CrossOrigin(origins = "http://vlad-maxim-magomed-game.herokuapp.com", maxAge = 3600)
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/auth/regirstration", method = RequestMethod.POST)
     public ResponseEntity<?> signUp(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
@@ -191,7 +190,7 @@ public class UserControllerWithDB {
         }
     }
 
-    @CrossOrigin(origins = "http://vlad-maxim-magomed-game.herokuapp.com", maxAge = 3600)
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/stats/{count}", method = RequestMethod.GET)
     public ResponseEntity<?> getMMR(@PathVariable(value = "count", required = false) int count) throws IOException {
         try {
@@ -204,7 +203,7 @@ public class UserControllerWithDB {
         }
     }
 
-    @CrossOrigin(origins = "http://vlad-maxim-magomed-game.herokuapp.com", maxAge = 3600)
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/test", method = RequestMethod.POST)
     public ResponseEntity<?> test(@RequestBody Test test) throws IOException {
         return ResponseEntity.ok(test);
