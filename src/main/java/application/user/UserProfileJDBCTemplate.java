@@ -92,6 +92,31 @@ public class UserProfileJDBCTemplate {
         LOGGER.info("Updated user success");
     }
 
+    public void updateRating(String username, String key) {
+        switch (key) {
+            case "WIN": {
+                final String sql = "UPDATE user_project SET wins = user_project.wins + 1 WHERE lower(nickname) = lower(?)";
+                jdbcTemplate.update(sql, username);
+                LOGGER.info("Win set success");
+                break;
+            }
+            case "LOSE": {
+                final String sql = "UPDATE user_project SET losses = user_project.losses + 1 WHERE lower(nickname) = lower(?)";
+                jdbcTemplate.update(sql, username);
+                LOGGER.info("Lose set success");
+                break;
+            }
+            case "DRAW": {
+                final String sql = "UPDATE user_project SET draws = user_project.draws + 1 WHERE lower(nickname) = lower(?)";
+                jdbcTemplate.update(sql, username);
+                LOGGER.info("Draws set success");
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
     public List<UserProfile> getUsers(int count) {
         final String sql = "SELECT * FROM user_project ORDER BY wins LIMIT ?";
         final List<UserProfile> users = jdbcTemplate.query(sql, new UserProfileMapper(), count);

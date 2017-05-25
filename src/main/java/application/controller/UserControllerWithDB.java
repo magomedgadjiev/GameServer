@@ -1,10 +1,7 @@
 package application.controller;
 
 import application.config.ResponseMessage;
-import application.models.Resp;
-import application.models.RespWithUser;
-import application.models.RespWithUsers;
-import application.models.Test;
+import application.models.*;
 import application.user.UserProfile;
 import application.user.UserProfileJDBCTemplate;
 import org.apache.log4j.Logger;
@@ -57,6 +54,23 @@ public class UserControllerWithDB {
         userProfileJDBCTemplate.deleteUser(userProfile.getUsername());
         LOGGER.info("delete user success");
         return ResponseEntity.ok(null);
+    }
+
+    @CrossOrigin(origins = "*", maxAge = 3600)
+    @RequestMapping(value = "/user/update", method = RequestMethod.POST)
+    public ResponseEntity<?> deleteUser(@RequestBody RatingUpdate ratingUpdate, HttpSession session) throws IOException {
+        try {
+            if (session.getAttribute(LOGIN) != null) {
+                userProfileJDBCTemplate.updateRating(ratingUpdate.getUsername(), ratingUpdate.getGameResult());
+                LOGGER.info(ResponseMessage.SUCCESS);
+                return ResponseEntity.ok(new Messager("ok"));
+            }
+            LOGGER.warn(ResponseMessage.LOGIN);
+            return new ResponseEntity<>(new Resp(1, ResponseMessage.LOGIN), HttpStatus.BAD_REQUEST);
+        } catch (RuntimeException ignored) {
+            LOGGER.error(ignored.getMessage());
+            return new ResponseEntity<>(new Resp(4, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
