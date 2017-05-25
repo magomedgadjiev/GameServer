@@ -120,7 +120,7 @@ public class UserProfileJDBCTemplate {
     }
 
     public List<UserProfile> getUsers(int count) {
-        final String sql = "SELECT * FROM user_project ORDER BY wins LIMIT ?";
+        final String sql = "SELECT * FROM user_project ORDER BY user_project.wins - user_project.losses desc LIMIT ?";
         final List<UserProfile> users = jdbcTemplate.query(sql, new UserProfileMapper(), count);
         LOGGER.info("getListUsers success");
         return users;
