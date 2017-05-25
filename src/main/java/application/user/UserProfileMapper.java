@@ -13,8 +13,8 @@ public class UserProfileMapper implements RowMapper<UserProfile> {
         user.setUsername(rs.getString("nickname"));
         user.setPassword(rs.getString("password"));
         user.setWins(rs.getInt("wins"));
-        user.setWins(rs.getInt("losses"));
-        user.setWins(rs.getInt("draws"));
+        user.setLosses(rs.getInt("losses"));
+        user.setDraws(rs.getInt("draws"));
         return user;
     }
 }

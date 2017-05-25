@@ -4,6 +4,7 @@ import application.config.ResponseMessage;
 import application.models.*;
 import application.user.UserProfile;
 import application.user.UserProfileJDBCTemplate;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -127,6 +128,20 @@ public class UserControllerWithDB {
             return new ResponseEntity<>(new Resp(4, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @CrossOrigin(origins = "*", maxAge = 3600)
+    @RequestMapping(value = "/user/user", method = RequestMethod.POST)
+    public ResponseEntity<?> gg(@RequestBody RatingUpdate ratingUpdate, HttpSession session) throws IOException {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            final UserProfile userProfile = userProfileJDBCTemplate.getUserProfileByUsername(ratingUpdate.getUsername());
+            return ResponseEntity.ok(objectMapper.writeValueAsString(userProfile));
+        } catch (RuntimeException ignored) {
+            LOGGER.error(ignored.getMessage());
+            return new ResponseEntity<>(new Resp(4, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/user/setInfoUser", method = RequestMethod.POST)
