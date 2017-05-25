@@ -60,13 +60,9 @@ public class UserControllerWithDB {
     @RequestMapping(value = "/user/update", method = RequestMethod.POST)
     public ResponseEntity<?> deleteUser(@RequestBody RatingUpdate ratingUpdate, HttpSession session) throws IOException {
         try {
-            if (session.getAttribute(LOGIN) != null) {
-                userProfileJDBCTemplate.updateRating(ratingUpdate.getUsername(), ratingUpdate.getGameResult());
-                LOGGER.info(ResponseMessage.SUCCESS);
-                return ResponseEntity.ok(new Messager("ok"));
-            }
-            LOGGER.warn(ResponseMessage.LOGIN);
-            return new ResponseEntity<>(new Resp(1, ResponseMessage.LOGIN), HttpStatus.BAD_REQUEST);
+            userProfileJDBCTemplate.updateRating(ratingUpdate.getUsername(), ratingUpdate.getGameResult());
+            LOGGER.info(ResponseMessage.SUCCESS);
+            return ResponseEntity.ok(new Messager("ok"));
         } catch (RuntimeException ignored) {
             LOGGER.error(ignored.getMessage());
             return new ResponseEntity<>(new Resp(4, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -91,7 +87,7 @@ public class UserControllerWithDB {
                 key = key / 10 + 3;
             }
             if (key != 0) {
-                if (key / 10 == 0){
+                if (key / 10 == 0) {
                     key += 70;
                 }
                 return new ResponseEntity<>(new Resp(key, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
@@ -159,10 +155,10 @@ public class UserControllerWithDB {
             int key = userProfile.isGoodInf();
             key = isDuplicate(userProfile.getUsername(), userProfile.getEmail(), key);
             if (key != 0) {
-                if (key / 10 == 0){
+                if (key / 10 == 0) {
                     key += 70;
                 }
-                if (key / 100 == 0){
+                if (key / 100 == 0) {
                     key += 700;
                 }
                 return new ResponseEntity<>(new Resp(key, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
