@@ -102,10 +102,8 @@ public class UserControllerWithDB {
             if (!userProfile.getPassword().equals(passwoord)) {
                 return new ResponseEntity<>(new Resp(2, ResponseMessage.REGISTRATION), HttpStatus.BAD_REQUEST);
             }
-            if (session.getAttribute(LOGIN) == null) {
-                session.setAttribute(LOGIN, true);
-                session.setAttribute(EMAIL, userProfile.getEmail());
-            }
+            session.setAttribute(LOGIN, true);
+            session.setAttribute(EMAIL, userProfile.getEmail());
             LOGGER.info(ResponseMessage.SUCCESS);
             return ResponseEntity.ok(new RespWithUser(777, userProfile));
         } catch (RuntimeException ignored) {
