@@ -13,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
@@ -118,6 +121,7 @@ public class UserControllerWithDB {
     @RequestMapping(value = "/user/getInfoUser", method = RequestMethod.GET)
     public ResponseEntity<?> getInfoUser(HttpSession session) throws IOException {
         try {
+            LOGGER.info(session.getId());
             if (session.getAttribute(LOGIN) != null) {
                 LOGGER.info(ResponseMessage.SUCCESS);
                 return ResponseEntity.ok(new RespWithUser(0, (userProfileJDBCTemplate.getUserProfileByEmail((String) (session.getAttribute(EMAIL))))));
@@ -205,9 +209,9 @@ public class UserControllerWithDB {
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = "/test", method = RequestMethod.POST)
-    public ResponseEntity<?> test(@RequestBody Test test) throws IOException {
-        return ResponseEntity.ok(test);
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public ResponseEntity<?> test(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        return ResponseEntity.ok(null);
     }
 
     public int isDuplicate(String username, String email, int key) {
