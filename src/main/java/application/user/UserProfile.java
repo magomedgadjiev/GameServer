@@ -81,8 +81,8 @@ public class UserProfile implements Comparable<UserProfile> {
         if (ff(username) || username.contains("@")){
             key += 30;
         }
-        if (ff(email) || !email.contains("@")){
-            key += 300;
+        if (ff(email) || !email.contains("@") && !email.isEmpty()){
+            key = 300;
         }
         return key;
     }
