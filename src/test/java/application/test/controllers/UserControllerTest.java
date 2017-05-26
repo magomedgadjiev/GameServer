@@ -68,7 +68,7 @@ public class UserControllerTest {
     @Test
     public void testLogin() throws Exception {
         final ObjectMapper objectMapper = new ObjectMapper();
-        userProfile.setEmail("b");
+        userProfile.setEmail("b@");
         userProfile.setPassword("b");
         userProfile.setUsername("b");
         mockMvc.perform(post("/api/DB/auth/regirstration")
@@ -87,7 +87,7 @@ public class UserControllerTest {
         final ObjectMapper objectMapper = new ObjectMapper();
         userProfile.setUsername("c");
         userProfile.setPassword("c");
-        userProfile.setEmail("c");
+        userProfile.setEmail("c@");
         mockMvc.perform(post("/api/DB/auth/regirstration")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userProfile))).andExpect(status().isCreated());

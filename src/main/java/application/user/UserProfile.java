@@ -75,20 +75,20 @@ public class UserProfile implements Comparable<UserProfile> {
     }
 
     public int f(int key){
-        if (ff(password)){
+        if (ff(password) || password.contains("@")){
             key += 3;
         }
-        if (ff(username)){
+        if (ff(username) || username.contains("@")){
             key += 30;
         }
-        if (ff(email)){
+        if (ff(email) || !email.contains("@")){
             key += 300;
         }
         return key;
     }
 
     public boolean ff(String word){
-        return word.contains("+") || word.contains("-") || word.contains("=") || word.contains("_") || word.contains("-") || word.contains(")") || word.contains(")") || word.contains("(") || word.contains("*") || word.contains("&") || word.contains("^") || word.contains("%") || word.contains("$") || word.contains("#") || word.contains("@") || word.contains("!") || word.contains("~") || word.contains("`") || word.contains("?") || word.contains("/") || word.contains(">") || word.contains("<") || word.contains(".") || word.contains(",") || word.contains("}") || word.contains("{") || word.contains("|");
+        return word.contains("+") || word.contains("-") || word.contains("=") || word.contains("_") || word.contains("-") || word.contains(")") || word.contains(")") || word.contains("(") || word.contains("*") || word.contains("&") || word.contains("^") || word.contains("%") || word.contains("$") || word.contains("#") || word.contains("!") || word.contains("~") || word.contains("`") || word.contains("?") || word.contains("/") || word.contains(">") || word.contains("<") || word.contains(".") || word.contains(",") || word.contains("}") || word.contains("{") || word.contains("|");
     }
 
     public String getEmail() {
