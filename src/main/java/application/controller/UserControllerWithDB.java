@@ -123,7 +123,7 @@ public class UserControllerWithDB {
                 return ResponseEntity.ok(new RespWithUser(0, (userProfileJDBCTemplate.getUserProfileByEmail((String) (session.getAttribute(EMAIL))))));
             }
             LOGGER.warn(ResponseMessage.LOGIN);
-            return new ResponseEntity<>(new Resp(1, ResponseMessage.LOGIN), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new Resp(1, ResponseMessage.LOGIN), HttpStatus.NOT_FOUND);
         } catch (RuntimeException ignored) {
             LOGGER.error(ignored.getMessage());
             return new ResponseEntity<>(new Resp(4, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -199,6 +199,7 @@ public class UserControllerWithDB {
             return ResponseEntity.ok(respWithUsers);
         } catch (RuntimeException ignored) {
             LOGGER.error(ignored.getMessage());
+            ResponseEntity<Object> responseEntity = new ResponseEntity<Object>(null);
             return new ResponseEntity<>(new Resp(4, ResponseMessage.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
