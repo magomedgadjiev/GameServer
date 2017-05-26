@@ -88,7 +88,7 @@ public class UserProfile implements Comparable<UserProfile> {
     }
 
     public boolean ff(String word){
-        return word.contains("+") || word.contains("-") || word.contains("=") || word.contains("_") || word.contains("-") || word.contains(")") || word.contains(")") || word.contains("(") || word.contains("*") || word.contains("&") || word.contains("^") || word.contains("%") || word.contains("$") || word.contains("#") || word.contains("!") || word.contains("~") || word.contains("`") || word.contains("?") || word.contains("/") || word.contains(">") || word.contains("<") || word.contains(".") || word.contains(",") || word.contains("}") || word.contains("{") || word.contains("|");
+        return word.contains("+") || word.contains("-") || word.contains("=") || word.contains("_") || word.contains("-") || word.contains(")") || word.contains(")") || word.contains("(") || word.contains("*") || word.contains("&") || word.contains("^") || word.contains("%") || word.contains("$") || word.contains("#") || word.contains("!") || word.contains("~") || word.contains("`") || word.contains("?") || word.contains("/") || word.contains(">") || word.contains("<") || word.contains(",") || word.contains("}") || word.contains("{") || word.contains("|");
     }
 
     public String getEmail() {
