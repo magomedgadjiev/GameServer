@@ -230,6 +230,16 @@ public class UserControllerWithDB {
         return key;
     }
 
+    @RequestMapping(
+            value = "/{slug}/create",
+            method = RequestMethod.POST
+    )
+    public final ResponseEntity<?> createThread(
+            @PathVariable(value = "slug") final String slug
+    ) {
+        return ResponseEntity.ok(null);
+    }
+
     @Autowired
     public UserControllerWithDB(UserProfileJDBCTemplate userProfileJDBCTemplate) {
         this.userProfileJDBCTemplate = userProfileJDBCTemplate;
