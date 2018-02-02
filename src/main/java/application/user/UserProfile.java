@@ -54,43 +54,6 @@ public class UserProfile implements Comparable<UserProfile> {
         this.username = username;
     }
 
-    public int isGoodInf(){
-        int key = isEmpty();
-        key = f(key);
-        return key;
-    }
-
-    public int isEmpty() {
-        int answer = 0;
-        if (password.isEmpty()){
-            answer = 1;
-        }
-        if (email.isEmpty()){
-            answer += 100;
-        }
-        if (username.isEmpty()){
-            answer += 10;
-        }
-        return answer;
-    }
-
-    public int f(int key){
-        if (ff(password) || password.contains("@")){
-            key += 3;
-        }
-        if (ff(username) || username.contains("@")){
-            key += 30;
-        }
-        if (ff(email) || !email.contains("@") && !email.isEmpty()){
-            key = 300;
-        }
-        return key;
-    }
-
-    public boolean ff(String word){
-        return word.contains("+") || word.contains("-") || word.contains("=") || word.contains("_") || word.contains("-") || word.contains(")") || word.contains(")") || word.contains("(") || word.contains("*") || word.contains("&") || word.contains("^") || word.contains("%") || word.contains("$") || word.contains("#") || word.contains("!") || word.contains("~") || word.contains("`") || word.contains("?") || word.contains("/") || word.contains(">") || word.contains("<") || word.contains(",") || word.contains("}") || word.contains("{") || word.contains("|");
-    }
-
     public String getEmail() {
         return email;
     }

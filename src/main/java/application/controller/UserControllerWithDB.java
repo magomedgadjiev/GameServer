@@ -77,25 +77,6 @@ public class UserControllerWithDB {
     @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
     public ResponseEntity<?> signIn(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
-            int key = 0;
-            if (userProfile.getEmail().isEmpty()) {
-                key = 10;
-            }
-            if (userProfile.getPassword().isEmpty()) {
-                key += 1;
-            }
-            if (userProfile.ff(userProfile.getEmail())) {
-                key = 30 + key % 10;
-            }
-            if (userProfile.ff(userProfile.getPassword())) {
-                key = key / 10 + 3;
-            }
-            if (key != 0) {
-                if (key / 10 == 0) {
-                    key += 70;
-                }
-                return new ResponseEntity<>(new Resp(key, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
-            }
             String passwoord = userProfile.getPassword();
             userProfile = userProfileJDBCTemplate.getUserProfileByEmail(userProfile.getEmail());
             if (userProfile == null) {
@@ -172,17 +153,6 @@ public class UserControllerWithDB {
     @RequestMapping(value = "/auth/regirstration", method = RequestMethod.POST)
     public ResponseEntity<?> signUp(@RequestBody UserProfile userProfile, HttpSession session) throws IOException {
         try {
-            int key = userProfile.isGoodInf();
-            key = isDuplicate(userProfile.getUsername(), userProfile.getEmail(), key);
-            if (key != 0) {
-                if (key / 10 == 0) {
-                    key += 70;
-                }
-                if (key / 100 == 0) {
-                    key += 700;
-                }
-                return new ResponseEntity<>(new Resp(key, ResponseMessage.BAD_REQUEST), HttpStatus.BAD_REQUEST);
-            }
             userProfileJDBCTemplate.create(userProfile.getUsername(), userProfile.getPassword(), userProfile.getEmail());
             session.setAttribute(LOGIN, true);
             session.setAttribute(EMAIL, userProfile.getEmail());
@@ -208,42 +178,10 @@ public class UserControllerWithDB {
         }
     }
 
-    @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public ResponseEntity<?> test(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        return ResponseEntity.ok(null);
-    }
-
-    public int isDuplicate(String username, String email, int key) {
-        if (key / 100 == 0) {
-            if (userProfileJDBCTemplate.getUserProfileByEmail(email) != null) {
-                key = 200 + (key % 100);
-            }
-        }
-        if (key / 10 % 10 == 0) {
-            if (userProfileJDBCTemplate.getUserProfileByUsername(username) != null) {
-                int a = key % 100;
-                int b = key / 100;
-                key = b * 100 + 2 * 10 + a;
-            }
-        }
-        return key;
-    }
-
-    @RequestMapping(
-            value = "/{slug}/create",
-            method = RequestMethod.POST
-    )
-    public final ResponseEntity<?> createThread(
-            @PathVariable(value = "slug") final String slug
-    ) {
-        return ResponseEntity.ok(null);
-    }
-
     @Autowired
     public UserControllerWithDB(UserProfileJDBCTemplate userProfileJDBCTemplate) {
         this.userProfileJDBCTemplate = userProfileJDBCTemplate;
-//        userProfileJDBCTemplate.dropTable();
+        userProfileJDBCTemplate.dropTable();
         userProfileJDBCTemplate.createTable();
     }
 }
